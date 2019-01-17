@@ -1,28 +1,30 @@
 package model;
 
+import view.SpectrangleBoardPrinter;
+
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 public class SpectrangleBoard {
 
     // Constants for the game
-    public final static int WILD_COLOR = 6;
-    private final static int[][] multipliers_36 = {
-            {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-            {0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0},
-            {0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0},
-            {0, 0, 0, 1, 2, 4, 1, 4, 2, 1, 0, 0},
-            {0, 0, 1, 1, 1, 1, 4, 1, 1, 1, 1, 0},
-            {0, 1, 3, 1, 1, 1, 2, 1, 1, 1, 3, 1},
-    };
+    public final static SpectranglePieceColor THE_JOKER = SpectranglePieceColor.WHITE;
+    private static final int ThirtySixPieceBoard = 36;
+    private List<Integer> values;
+    private List<Character> vertical;
+    private List<Character> left;
+    private List<Character> right;
+
     // The size of the board
     private int numRows;
     private int numCols;
-    private int ThirtySixPieceBoard;
+    private List<Integer> multipliers;
     // Multipliers for the spaces on the board.
     // Note: the multipliers array is [row][col], which is different from pretty
     //       much all the rest of this code (which is [col][row])
-    private int[][] multipliers;
+
 
     // The pieces on the board.
     private SpectranglePiece[][] boardPieces;
@@ -35,9 +37,8 @@ public class SpectrangleBoard {
 
     // The current player scores
     private int[] playerScores;
-
     // The location of each player's most recent move.
-    private Point[] lastMove;
+    private int[] lastMove;
 
     // The number of players in the game.
     private int numPlayers;
@@ -64,14 +65,19 @@ public class SpectrangleBoard {
         playerPieces = new SpectranglePiece[numPlayers][piecesPerPlayer];
         playerPieceMoves = new Vector[numPlayers][piecesPerPlayer];
         playerScores = new int[numPlayers];
-        lastMove = new Point[numPlayers];
+        lastMove = new int[numPlayers];
 
-        // Determine size of board from flavor
-        multipliers = multipliers_36;
 
         // Create items that depend on the board size
-        numRows = multipliers.length;
-        numCols = multipliers[0].length;
+        values = Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        vertical = Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        left = Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        right = Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        multipliers = Arrays.asList(1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 4, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1, 3, 1);
+
+
+        numRows = vertical.size();
+        numCols = left.size();
         boardPieces = new SpectranglePiece[numCols][numRows];
 
         // Reset the game
@@ -135,8 +141,8 @@ public class SpectrangleBoard {
      * Return the multiplier to use when playing a piece on the given space
      * of the board.
      */
-    public int getMultiplier(int c, int r) {
-        return multipliers[r][c];
+    public int getMultiplier(int index) {
+        return multipliers.get(index);
     }
 
     /**
@@ -171,7 +177,7 @@ public class SpectrangleBoard {
     /**
      * Return the last move for a player.
      */
-    public Point getLastMove(int seatNum) {
+    public int getLastMove(int seatNum) {
         return lastMove[seatNum];
     }
 
@@ -217,26 +223,26 @@ public class SpectrangleBoard {
      * @return an array of pieces that have been flipped/rotated into the valid
      * orientations, or null if this move is not valid.
      */
-    public SpectranglePiece[] getValidOrientationsForPiece(int seatNum, int pieceIndex, Point loc) {
-        if (firstMove) {
-            // Handle the first move special.
-            return (getMultiplier(loc.x, loc.y) == 1) ?
-                    makePieceRotations(playerPieces[seatNum][pieceIndex]) :
-                    null;
-        }
-
-        // Search the valid move vector to find the one that corresponds to this
-        // location on the board.
-        Vector moves = playerPieceMoves[seatNum][pieceIndex];
-        for (int i = 0; i < moves.size(); i++) {
-            SpectrangleValidMoveElement el = (SpectrangleValidMoveElement) moves.get(i);
-            if (el.isSameSpace(loc)) {
-                return el.getOrientations();
-            }
-        }
-
-        return null;
-    }
+//    public SpectranglePiece[] getValidOrientationsForPiece(int seatNum, int pieceIndex, Point loc) {
+//        if (firstMove) {
+//            // Handle the first move special.
+//            return (getMultiplier(loc.x, loc.y) == 1) ?
+//                    makePieceRotations(playerPieces[seatNum][pieceIndex]) :
+//                    null;
+//        }
+//
+//        // Search the valid move vector to find the one that corresponds to this
+//        // location on the board.
+//        Vector moves = playerPieceMoves[seatNum][pieceIndex];
+//        for (int i = 0; i < moves.size(); i++) {
+//            SpectrangleValidMoveElement el = (SpectrangleValidMoveElement) moves.get(i);
+//            if (el.isSameSpace(loc)) {
+//                return el.getOrientations();
+//            }
+//        }
+//
+//        return null;
+//    }
 
     /**
      * Return if the given player has a valid move or not.
@@ -285,7 +291,7 @@ public class SpectrangleBoard {
                 for (int row = 0; row < numRows; row++) {
                     // If this is a space on the board and it's empty, then try to
                     // see if the piece fits here.
-                    if ((multipliers[row][col] > 0) &&
+                    if ((multipliers.get(pieceIndex) > 0) &&
                             (boardPieces[col][row] == null)) {
                         // Check this space for a valid move.
                         Point loc = new Point(col, row);
@@ -311,16 +317,14 @@ public class SpectrangleBoard {
      * @return true if this is a valid move and has been made
      * false if this is not a valid move and has not been made
      */
-    public boolean makeMove(int seatNum, SpectranglePiece piece, Point loc) {
-        int col = loc.x;
-        int row = loc.y;
+    public boolean makeMove(int seatNum, SpectranglePiece piece, int loc) {
         int neighbors;
 
         // Verify that this is a legal move.
         if (firstMove) {
             // For the first move, we need to verify that the multiplier for
             // the space is 1.  That is the only constraint.
-            if (multipliers[row][col] != 1) {
+            if (multipliers.get(loc) != 1) {
                 return false;
             }
             neighbors = 1;
@@ -439,7 +443,7 @@ public class SpectrangleBoard {
         }
 
         // Create the 6 rotation/reflections of the piece.
-        SpectranglePiece[] pieces = makePieceRotations(thePiece);
+        SpectranglePiece[] pieces = SpectranglePiece.makePieceRotations(thePiece);
         int numPieces = pieces.length;
 
         // For each one, if the piece doesn't fit, then null out it's spot.
@@ -454,52 +458,7 @@ public class SpectrangleBoard {
         return (numPieces == 0) ? null : pieces;
     }
 
-    /*
-     * This routine will generate the possible rotations/flips of the given
-     * piece.  The array returned will include only distinct pieces, so in the
-     * case that 2 or 3 segments are the same color there will be fewer entries
-     * in the array returned.
-     * A copy of the given piece will be returned as element 0 of the array.
-     *
-     * @param thePiece   The piece to make rotations from.
-     * @return an array of the valid orientations.
-     */
-    private SpectranglePiece[] makePieceRotations(SpectranglePiece thePiece) {
-        SpectranglePiece[] rots;
 
-        int val = thePiece.getValue();
-        int cl = thePiece.getColor(SpectranglePiece.LEFT_SECTION);
-        int cr = thePiece.getColor(SpectranglePiece.RIGHT_SECTION);
-        int cb = thePiece.getColor(SpectranglePiece.BOTTOM_SECTION);
-
-        if (cl != cr) {
-            // All 3 colors are different, so 6 orientations
-            rots = new SpectranglePiece[6];
-
-            rots[0] = new SpectranglePiece(val, cb, cl, cr);
-            rots[1] = new SpectranglePiece(val, cb, cr, cl);
-            rots[2] = new SpectranglePiece(val, cl, cr, cb);
-            rots[3] = new SpectranglePiece(val, cr, cl, cb);
-            rots[4] = new SpectranglePiece(val, cr, cb, cl);
-            rots[5] = new SpectranglePiece(val, cl, cb, cr);
-        } else {
-            if (cl == cb) {
-                // All 3 colors are the same, so only 1 orientation
-                rots = new SpectranglePiece[1];
-
-                rots[0] = new SpectranglePiece(val, cb, cl, cr);
-            } else {
-                // Left & right are same color, so 3 orientations
-                rots = new SpectranglePiece[3];
-
-                rots[0] = new SpectranglePiece(val, cb, cl, cr);
-                rots[1] = new SpectranglePiece(val, cr, cb, cl);
-                rots[2] = new SpectranglePiece(val, cl, cr, cb);
-            }
-        }
-
-        return rots;
-    }
 
     /**
      * Determine if the give piece can be placed in the given location.
@@ -552,8 +511,8 @@ public class SpectrangleBoard {
     /**
      * Determine if the two colors provided match.
      */
-    public boolean colorMatch(int c1, int c2) {
-        return ((c1 == c2) || (c1 == WILD_COLOR) || (c2 == WILD_COLOR));
+    public boolean colorMatch(SpectranglePieceColor c1, SpectranglePieceColor c2) {
+        return ((c1 == c2) || (c1 == THE_JOKER) || (c2 == THE_JOKER));
     }
 
     /**
@@ -669,5 +628,10 @@ public class SpectrangleBoard {
         return (((col + row) & 0x01) == 0);
     }
 
+
+    @Override
+    public String toString() {
+        return SpectrangleBoardPrinter.getBoardString(values, vertical, left, right);
+    }
 
 }
