@@ -27,13 +27,13 @@ public class SpectrangleBoard {
 
 
     // The pieces on the board.
-    private SpectranglePiece[][] boardPieces;
+    private SpectranglePiece[] boardPieces;
 
     // The pieces in the player's hands.
-    private SpectranglePiece[][] playerPieces;
+    private SpectranglePiece[] playerPieces;
 
     // The list of valid moves for each player's piece.
-    private Vector[][] playerPieceMoves;
+    private Vector[] playerPieceMoves;
 
     // The current player scores
     private int[] playerScores;
@@ -106,7 +106,7 @@ public class SpectrangleBoard {
         // Clear the player scores & last moves
         for (int p = 0; p < playerScores.length; p++) {
             playerScores[p] = 0;
-            lastMove[p] = null;
+            lastMove[p] = 0;
         }
 
         // Reset the number of tiles to go.
@@ -331,7 +331,7 @@ public class SpectrangleBoard {
         } else {
             // Verify that the piece given goes on the location given.
             neighbors = canPlacePiece(piece, loc);
-            if ((neighbors <= 0) || (multipliers[row][col] == 0)) {
+            if ((neighbors <= 0) || (multipliers.get(loc) == 0)) {
                 return false;
             }
         }
@@ -470,15 +470,14 @@ public class SpectrangleBoard {
      * @return the number of neighbors that the piece will have if placed at the
      * given location, or -1 if the piece cannot be placed here.
      */
-    public int canPlacePiece(SpectranglePiece thePiece, Point loc) {
+    public int canPlacePiece(SpectranglePiece thePiece, int loc) {
         int neighborCount = 0;
-        int col = loc.x;
-        int row = loc.y;
+
 
         // Check left neighbor.
         SpectranglePiece leftNeighbor = getLeftNeighbor(col, row);
         if (leftNeighbor != null) {
-            if (!colorMatch(leftNeighbor.getColor(SpectranglePiece.RIGHT_SECTION),
+            if (!SpectranglePieceColor.colorMatch(leftNeighbor.getColor(SpectranglePiece.RIGHT_SECTION),
                     thePiece.getColor(SpectranglePiece.LEFT_SECTION))) {
                 return -1;
             }
@@ -488,7 +487,7 @@ public class SpectrangleBoard {
         // Check right neighbor.
         SpectranglePiece rightNeighbor = getRightNeighbor(col, row);
         if (rightNeighbor != null) {
-            if (!colorMatch(rightNeighbor.getColor(SpectranglePiece.LEFT_SECTION),
+            if (!SpectranglePieceColor.colorMatch(rightNeighbor.getColor(SpectranglePiece.LEFT_SECTION),
                     thePiece.getColor(SpectranglePiece.RIGHT_SECTION))) {
                 return -1;
             }
@@ -498,7 +497,7 @@ public class SpectrangleBoard {
         // Check bottom neighbor.
         SpectranglePiece bottomNeighbor = getBottomNeighbor(col, row);
         if (bottomNeighbor != null) {
-            if (!colorMatch(bottomNeighbor.getColor(SpectranglePiece.BOTTOM_SECTION),
+            if (!SpectranglePieceColor.colorMatch(bottomNeighbor.getColor(SpectranglePiece.BOTTOM_SECTION),
                     thePiece.getColor(SpectranglePiece.BOTTOM_SECTION))) {
                 return -1;
             }
@@ -506,13 +505,6 @@ public class SpectrangleBoard {
         }
 
         return neighborCount;
-    }
-
-    /**
-     * Determine if the two colors provided match.
-     */
-    public boolean colorMatch(SpectranglePieceColor c1, SpectranglePieceColor c2) {
-        return ((c1 == c2) || (c1 == THE_JOKER) || (c2 == THE_JOKER));
     }
 
     /**

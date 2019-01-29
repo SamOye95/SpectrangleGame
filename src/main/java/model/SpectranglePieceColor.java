@@ -22,4 +22,11 @@ public enum SpectranglePieceColor {
                 return ' ';
         }
     }
+
+    /**
+     * Determine if the two colors provided match.
+     */
+    public boolean colorMatch(SpectranglePieceColor c1, SpectranglePieceColor c2) {
+        return ((c1 == c2) || (c1 == WHITE) || (c2 == WHITE));
+    }
 }
