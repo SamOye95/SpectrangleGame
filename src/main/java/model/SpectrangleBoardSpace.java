@@ -6,6 +6,9 @@ public class SpectrangleBoardSpace {
     private SpectrangleBoardSpace left, right, vertical;
 
     private int multiplier;
+    private SpectranglePieceOrientation orientation;
+    private int index;
+
 
     public SpectrangleBoardSpace() {
 
@@ -43,5 +46,21 @@ public class SpectrangleBoardSpace {
         this.vertical = vertical;
     }
 
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public SpectranglePieceOrientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(SpectranglePieceOrientation orientation) {
+        this.orientation = orientation;
+    }
 
 }
