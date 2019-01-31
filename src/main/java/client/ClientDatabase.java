@@ -2,10 +2,11 @@ package client;
 
 import model.SpectrangleGame;
 import model.SpectranglePlayer;
+import network.Database;
 import network.InputThread;
 import network.Peer;
 
-public class ClientDatabase {
+public class ClientDatabase implements Database {
 
 
     private Peer peer;

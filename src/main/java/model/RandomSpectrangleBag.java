@@ -4,7 +4,9 @@ package model;
 import exceptions.EmptyBagException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
 
 public class RandomSpectrangleBag implements SpectrangleBag {
 
@@ -36,13 +38,24 @@ public class RandomSpectrangleBag implements SpectrangleBag {
 
     public SpectranglePiece takeSpectranglePiece() throws EmptyBagException {
 
-        if (getTheNumberOfRemainingPieces() == 0) {
+        if (pieces.size() == 0) {
             throw new EmptyBagException();
         }
 
         return pieces.remove(random.nextInt(getTheNumberOfRemainingPieces()));
 
 
+    }
+
+    public SpectranglePiece takeSpectranglePiece(String piece) {
+        for (SpectranglePiece sp : this.pieces) {
+            if (sp.toString().equals(piece)) {
+                this.pieces.remove(sp);
+                return sp;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -53,52 +66,60 @@ public class RandomSpectrangleBag implements SpectrangleBag {
 
     }
 
+    public List<SpectranglePiece> getPieces() {
+        return pieces;
+    }
+
+    public void setPieces(ArrayList<SpectranglePiece> pieces) {
+        this.pieces = pieces;
+    }
+
     public void resetBag() {
         pieces.clear();
 
-        // 6-point tiles
-        pieces.add(new SpectranglePiece(6, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.RED));
-        pieces.add(new SpectranglePiece(6, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN));
-        pieces.add(new SpectranglePiece(6, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE));
-        pieces.add(new SpectranglePiece(6, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW));
-        pieces.add(new SpectranglePiece(6, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE));
-        // 5-point tiles
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.YELLOW));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.RED));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.RED));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.BLUE));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.GREEN));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.BLUE));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.YELLOW));
-        pieces.add(new SpectranglePiece(5, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.GREEN));
-        // 4-point tiles
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.BLUE));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.GREEN));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.GREEN));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.YELLOW));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.YELLOW));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.RED));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.RED));
-        pieces.add(new SpectranglePiece(4, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.BLUE));
-        // 3-point tiles
-        pieces.add(new SpectranglePiece(3, SpectranglePieceColor.YELLOW, SpectranglePieceColor.BLUE, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(3, SpectranglePieceColor.RED, SpectranglePieceColor.GREEN, SpectranglePieceColor.YELLOW));
-        pieces.add(new SpectranglePiece(3, SpectranglePieceColor.BLUE, SpectranglePieceColor.GREEN, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(3, SpectranglePieceColor.GREEN, SpectranglePieceColor.RED, SpectranglePieceColor.BLUE));
-        // 2-point tiles
-        pieces.add(new SpectranglePiece(2, SpectranglePieceColor.BLUE, SpectranglePieceColor.RED, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(2, SpectranglePieceColor.YELLOW, SpectranglePieceColor.PURPLE, SpectranglePieceColor.RED));
-        pieces.add(new SpectranglePiece(2, SpectranglePieceColor.YELLOW, SpectranglePieceColor.PURPLE, SpectranglePieceColor.GREEN));
-        // 1-point tiles
-        pieces.add(new SpectranglePiece(1, SpectranglePieceColor.GREEN, SpectranglePieceColor.RED, SpectranglePieceColor.PURPLE));
-        pieces.add(new SpectranglePiece(1, SpectranglePieceColor.BLUE, SpectranglePieceColor.YELLOW, SpectranglePieceColor.GREEN));
-        pieces.add(new SpectranglePiece(1, SpectranglePieceColor.RED, SpectranglePieceColor.YELLOW, SpectranglePieceColor.BLUE));
-        // joker
-        pieces.add(new SpectranglePiece(1, SpectranglePieceColor.WHITE, SpectranglePieceColor.WHITE, SpectranglePieceColor.WHITE));
+        // 6-point pieces
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.RED, 6));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, 6));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, 6));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, 6));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, 6));
+        // 5-point pieces
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.YELLOW, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.PURPLE, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.RED, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.PURPLE, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.RED, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.BLUE, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.GREEN, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.BLUE, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.YELLOW, 5));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.GREEN, 5));
+        // 4-point pieces
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.BLUE, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.RED, SpectranglePieceColor.GREEN, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.GREEN, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.BLUE, SpectranglePieceColor.YELLOW, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.YELLOW, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.GREEN, SpectranglePieceColor.PURPLE, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.RED, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.YELLOW, SpectranglePieceColor.PURPLE, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.RED, 4));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.PURPLE, SpectranglePieceColor.PURPLE, SpectranglePieceColor.BLUE, 4));
+        // 3-point pieces
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.BLUE, SpectranglePieceColor.PURPLE, 3));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.GREEN, SpectranglePieceColor.YELLOW, 3));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.GREEN, SpectranglePieceColor.PURPLE, 3));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.RED, SpectranglePieceColor.BLUE, 3));
+        // 2-point pieces
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.RED, SpectranglePieceColor.PURPLE, 2));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.PURPLE, SpectranglePieceColor.RED, 2));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.YELLOW, SpectranglePieceColor.PURPLE, SpectranglePieceColor.GREEN, 2));
+        // 1-point pieces
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.GREEN, SpectranglePieceColor.RED, SpectranglePieceColor.PURPLE, 1));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.BLUE, SpectranglePieceColor.YELLOW, SpectranglePieceColor.GREEN, 1));
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.RED, SpectranglePieceColor.YELLOW, SpectranglePieceColor.BLUE, 1));
+        // joker piece
+        pieces.add(new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.WHITE, SpectranglePieceColor.WHITE, SpectranglePieceColor.WHITE, 1));
     }
 
 }

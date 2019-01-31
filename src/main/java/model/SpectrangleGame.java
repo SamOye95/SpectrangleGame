@@ -1,5 +1,7 @@
 package model;
 
+import network.Messenger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,19 +55,19 @@ public class SpectrangleGame implements Runnable {
             return 403;
         }
 
-        points = this.board.placeTile(tile, index);
+        points = this.board.placeSpectranglePiece(piece, index);
         if (points == -1) {
             return 404;
         }
 
-        player.getTiles().remove(tile);
+        player.getSpectranglePieces().remove(piece);
         player.addPoints(points);
         this.turn = this.nextPlayer();
 
         return 0;
     }
 
-    public int switchSpectranglePiece(SpectranglePlayer player, SpectranglePiece spectranglePiece) {
+    public int switchPiece(SpectranglePlayer player, SpectranglePiece spectranglePiece) {
 
         if (!this.getTurn().equals(player)) {
             return 403;
@@ -75,14 +77,14 @@ public class SpectrangleGame implements Runnable {
             return 403;
         }
 
-        player.getTiles().remove(tile);
-        this.bag.getTiles().add(tile);
-        player.drawTile();
+        player.getSpectranglePieces().remove(spectranglePiece);
+        this.bag.getPieces().add(spectranglePiece);
+        player.takeSpectranglePiece();
         this.turn = this.nextPlayer();
         return 0;
     }
 
-    public int switchTile(Player player, Tile tile, String newTileStr) {
+    public int switchPiece(SpectranglePlayer player, SpectranglePiece piece, String newTileStr) {
 
         if (!this.getTurn().equals(player)) {
             return 403;
@@ -92,14 +94,14 @@ public class SpectrangleGame implements Runnable {
             return 403;
         }
 
-        player.getTiles().remove(tile);
-        this.bag.getTiles().add(tile);
-        player.drawTile(newTileStr);
+        player.getSpectranglePieces().remove(piece);
+        this.bag.getPieces().add(piece);
+        player.takeSpectralPiece(newTileStr);
         this.turn = this.nextPlayer();
         return 0;
     }
 
-    public int skipMove(Player player) {
+    public int skipMove(SpectranglePlayer player) {
         if (this.canMakeMove(player)) {
             return 403;
         }
@@ -108,18 +110,18 @@ public class SpectrangleGame implements Runnable {
         return 0;
     }
 
-    public boolean canMakeMove(Player player) {
-        for (Tile tile : player.getTiles()) {
-            if (this.board.canBePlaced(tile)) {
+    public boolean canMakeMove(SpectranglePlayer player) {
+        for (SpectranglePiece piece : player.getSpectranglePieces()) {
+            if (this.board.canBePlaced(piece)) {
                 return true;
             }
         }
         return false;
     }
 
-    public Player nextPlayer() {
+    public SpectranglePlayer nextPlayer() {
         Integer index = this.players.indexOf(this.turn) + 1;
-        Player next = this.players.get(0);
+        SpectranglePlayer next = this.players.get(0);
 
         if (index < this.players.size()) {
             next = this.players.get(index);
@@ -128,22 +130,19 @@ public class SpectrangleGame implements Runnable {
         return next;
     }
 
-    public void leaveGame(Player player) {
-        this.bag.getTiles().addAll(player.getTiles());
-        player.setTiles(new ArrayList<Tile>());
+    public void leaveGame(SpectranglePlayer player) {
+        this.bag.getPieces().addAll(player.getSpectranglePieces());
+        player.setSpectranglePieces(new ArrayList<SpectranglePiece>());
         player.setScore(0);
         this.players.remove(player);
     }
 
-    //***************************************************
-    //------------------PRIVATE METHODS------------------
-    //***************************************************
     private void init() {
-        this.board = new Board();
-        this.bag = new Bag();
-        this.status = Status.NOT_STARTED;
+        this.board = new SpectrangleBoard();
+        this.bag = new RandomSpectrangleBag();
+        this.status = SpectranglePlayerStatus.NOT_STARTED;
 
-        for (Player player : this.players) {
+        for (SpectranglePlayer player : this.players) {
             player.setGame(this);
             player.setScore(0);
         }
@@ -151,60 +150,55 @@ public class SpectrangleGame implements Runnable {
         this.turn = players.get(0);
     }
 
-    //***************************************************
-    //------------------GETTERS/SETTERS------------------
-    //***************************************************
-    public Bag getBag() {
+
+    public RandomSpectrangleBag getBag() {
         return bag;
     }
 
-    public void setBag(Bag bag) {
+    public void setBag(RandomSpectrangleBag bag) {
         this.bag = bag;
     }
 
-    public List<Player> getPlayers() {
+    public List<SpectranglePlayer> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(List<SpectranglePlayer> players) {
         this.players = players;
     }
 
-    public Board getBoard() {
+    public SpectrangleBoard getBoard() {
         return board;
     }
 
-    public void setBoard(Board board) {
+    public void setBoard(SpectrangleBoard board) {
         this.board = board;
     }
 
-    public Player getTurn() {
+    public SpectranglePlayer getTurn() {
         return turn;
     }
 
-    public void setTurn(Player turn) {
+    public void setTurn(SpectranglePlayer turn) {
         this.turn = turn;
     }
 
-    //***************************************************
-    //------------------THREAD---------------------------
-    //***************************************************
-    @Override
+
     public void run() {
 
         //FIRST STEP - TELL ALL PLAYERS THAT THE GAME STARTED AND IN WHICH ORDER THE PLAYERS ARE
         Messenger.broadcast(this.players, "start " + this.getPlayersStr());
 
         //SECOND STEP - DRAW TILES FOR ALL OF THE PLAYERS
-        for (Player player : this.players) {
-            List<Tile> tiles = player.drawMaxTiles();
-            for (Tile tile : tiles) {
-                Messenger.broadcast(this.players, "drawnTile " + player.getNickname() + " " + tile.toString());
+        for (SpectranglePlayer player : this.players) {
+            List<SpectranglePiece> pieces = player.takeMaximumSpectranglePieces();
+            for (SpectranglePiece piece : pieces) {
+                Messenger.broadcast(this.players, "drawnTile " + player.getPlayerName() + " " + piece.toString());
             }
         }
 
-        while (this.status.equals(Status.RUNNING)) {
-            for (Player player : this.players) {
+        while (this.status.equals(SpectranglePlayerStatus.RUNNING)) {
+            for (SpectranglePlayer player : this.players) {
                 player.getPeer().write("requestMove");
                 while (this.turn.equals(player)) {
                     try {
@@ -214,14 +208,14 @@ public class SpectrangleGame implements Runnable {
                     }
                 }
 
-                if (this.getBag().getTiles().isEmpty()) {
-                    this.status = Status.FINISHED;
+                if (this.getBag().getPieces().isEmpty()) {
+                    this.status = SpectranglePlayerStatus.FINISHED;
                     Messenger.broadcast(this.players, "end");
                     break;
                 }
 
-                Tile tile = player.drawTile();
-                Messenger.broadcast(this.players, "drawnTile " + player.getNickname() + " " + tile.toString());
+                SpectranglePiece piece = player.takeSpectranglePiece();
+                Messenger.broadcast(this.players, "drawnTile " + player.getPlayerName() + " " + piece.toString());
             }
         }
     }

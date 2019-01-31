@@ -1,24 +1,18 @@
 package network;
 
-import interfaces.*;
+
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Observable;
 
 public class Peer extends Observable implements Runnable {
-    //***************************************************
-    //---------------------ATTRIBUTES--------------------
-    //***************************************************
+
     private Thread thread;
     private Socket socket;
     private Messenger messenger;
     private BufferedReader reader;
     private PrintWriter writer;
-
-    //***************************************************
-    //---------------------CONSTRUCTORS------------------
-    //***************************************************
     public Peer(Socket socket, Messenger messenger, Setup setup) {
         this.socket = socket;
         this.messenger = messenger;
@@ -31,10 +25,7 @@ public class Peer extends Observable implements Runnable {
         this.thread.start();
     }
 
-    //***************************************************
-    //---------------------THREAD------------------------
-    //***************************************************
-    @Override
+
     public void run() {
         String message;
 
@@ -49,9 +40,7 @@ public class Peer extends Observable implements Runnable {
         }
     }
 
-    //***************************************************
-    //---------------------PUBLIC METHODS---------------
-    //***************************************************
+
     public String read() throws IOException {
         return this.reader.readLine();
     }
@@ -64,9 +53,7 @@ public class Peer extends Observable implements Runnable {
         return this.socket.getInetAddress().getHostAddress();
     }
 
-    //***************************************************
-    //---------------------PRIVATE METHODS---------------
-    //***************************************************
+
     public void init() {
         try {
             InputStream in = this.socket.getInputStream();

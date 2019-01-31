@@ -1,11 +1,11 @@
 package server;
 
 import exceptions.PeerNotFoundException;
-import interfaces.*;
 import model.SpectranglePlayer;
 import network.Peer;
+import network.Setup;
 
-public class ServerPeer implements {
+public class ServerPeer implements Setup {
 
     private ServerDatabase database;
     private Peer peer;
@@ -16,7 +16,6 @@ public class ServerPeer implements {
     }
 
 
-    @Override
     public void run() {
         SpectranglePlayer player = new SpectranglePlayer(null, this.peer);
 

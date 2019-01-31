@@ -1,6 +1,6 @@
 package view;
 
-import model.SpectrangleBoard2;
+import model.SpectrangleBoard;
 import model.SpectrangleGame;
 import model.SpectranglePiece;
 import model.SpectranglePlayer;
@@ -16,14 +16,15 @@ public class SpectrangleGameView {
     public void take() {
         this.clear();
 
-        SpectrangleBoard2 board = this.game.getBoard();
+        SpectrangleBoard board = this.game.getBoard();
         System.out.println(board.toString());
         System.out.println("\n");
 
         for (SpectranglePlayer player : this.game.getPlayers()) {
 
-            System.out.println(player.getPlayerName() + "-Score:" + player.getScore()) {
-                SpectranglePiece.take(player.getSpectranglePieces());
+            System.out.println(player.getPlayerName() + "-Score:" + player.getScore());
+            {
+                SpectranglePiece.draw(player.getSpectranglePieces());
 
             }
         }

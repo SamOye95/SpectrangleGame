@@ -1,22 +1,21 @@
 package controller;
 
-
+import client.ClientDatabase;
+import model.SpectranglePlayer;
+import network.Database;
 import network.Message;
 import network.Peer;
+
+import java.util.List;
 
 public class SpectrangleClientPlayerController extends SpectrangleController {
 
 
-    //***************************************************
-    //------------------CONSTRUCTORS---------------------
-    //***************************************************
-    public PlayerController(ClientDatabase database) {
+    public SpectrangleClientPlayerController(Database database) {
         super(database);
     }
 
-    //***************************************************
-    //------------------PUBLIC METHODS-------------------
-    //***************************************************
+
     @Override
     public void forward(Peer peer, Message msg) {
         switch (msg.getCommand()) {
@@ -31,9 +30,7 @@ public class SpectrangleClientPlayerController extends SpectrangleController {
         }
     }
 
-    //***************************************************
-    //------------------SERVER COMMANDS------------------
-    //***************************************************
+
     private void serverMessage(String msg) {
         System.out.println("Server: " + msg);
         System.out.print("> ");
@@ -46,12 +43,12 @@ public class SpectrangleClientPlayerController extends SpectrangleController {
 
     public void nickname(String nickname) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        Player player = database.getPlayer();
+        SpectranglePlayer player = database.getPlayer();
 
         if (player != null) {
-            player.setNickname(nickname);
+            player.setPlayerName(nickname);
         } else {
-            player = new Player(nickname);
+            player = new SpectranglePlayer(nickname);
             database.setPlayer(player);
         }
     }

@@ -12,7 +12,7 @@ import view.SpectrangleGameView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpectrangleClientGameController {
+public class SpectrangleClientGameController extends SpectrangleController {
 
 
     private SpectrangleGameView view;
@@ -84,13 +84,13 @@ public class SpectrangleClientGameController {
         this.view.take();
     }
 
-    public void drawnTile(String nickname, String tileStr) {
+    public void drawnTile(String nickname, String pieceString) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
         List<SpectranglePlayer> players = database.getGame().getPlayers();
 
         for (SpectranglePlayer player : players) {
             if (nickname.equals(player.getPlayerName())) {
-                player.takeSpectralPiece(tileStr);
+                player.takeSpectralPiece(pieceString);
             }
         }
 
@@ -189,7 +189,7 @@ public class SpectrangleClientGameController {
         SpectrangleGame game = database.getGame();
         SpectranglePlayer player = database.getPlayer();
 
-        for (SpectranglePiece spectranglePiece : player.getTiles()) {
+        for (SpectranglePiece spectranglePiece : player.getSpectranglePieces()) {
             if (spectranglePiece.isEquivalent(tileStr)) {
                 spectranglePiece.rotate();
             }

@@ -3,27 +3,20 @@ package network;
 import java.util.Scanner;
 
 public class InputThread implements Runnable {
-    //***************************************************
-    //---------------------ATTRIBUTES--------------------
-    //***************************************************
+
     private Peer peer;
     private Thread thread;
     private boolean running;
     private Messenger messenger;
 
-    //***************************************************
-    //---------------------CONSTRUCTORS------------------
-    //***************************************************
+
     public InputThread(Peer peer, Messenger messenger) {
         this.peer = peer;
         this.running = true;
         this.messenger = messenger;
     }
 
-    //***************************************************
-    //---------------------THREAD------------------------
-    //***************************************************
-    @Override
+
     public void run() {
         String input;
         Scanner scanner = new Scanner(System.in);
@@ -40,9 +33,7 @@ public class InputThread implements Runnable {
 
     }
 
-    //***************************************************
-    //---------------------PUBLIC METHODS----------------
-    //***************************************************
+
     public void begin() {
         this.running = true;
         this.thread = new Thread(this);

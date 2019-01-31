@@ -1,27 +1,25 @@
 package controller;
 
+import network.Database;
+import network.Message;
+import network.Peer;
+
+import java.lang.reflect.Method;
+
+
 public abstract class SpectrangleController {
 
-    //***************************************************
-    //---------------------ATTRIBUTES--------------------
-    //***************************************************
+
     private Database database;
 
-    //***************************************************
-    //---------------------CONSTRUCTORS------------------
-    //***************************************************
-    public Controller(Database database) {
+    public SpectrangleController(Database database) {
         this.database = database;
     }
 
-    //***************************************************
-    //---------------------ABSTRACT METHODS--------------
-    //***************************************************
+
     public abstract void forward(Peer peer, Message msg);
 
-    //***************************************************
-    //---------------------PUBLIC METHODS----------------
-    //***************************************************
+
     public boolean hasMethod(String method) {
         for (Method m : this.getClass().getMethods()) {
             if (m.getName().equals(method)) {
@@ -31,9 +29,6 @@ public abstract class SpectrangleController {
         return false;
     }
 
-    //***************************************************
-    //---------------------PUBLIC METHODS----------------
-    //***************************************************
     public Database getDatabase() {
         return database;
     }

@@ -1,36 +1,42 @@
 package server;
 
-public class ServerDatabase implements Database {
-    //***************************************************
-    //---------------------ATTRIBUTES--------------------
-    //***************************************************
-    private List<Peer> peers;
-    private List<Player> players;
-    private Map<Peer, Player> users;
-    private List<Game> games;
 
-    //***************************************************
-    //---------------------CONSTRUCTORS------------------
-    //***************************************************
+import exceptions.PeerNotFoundException;
+import model.SpectrangleGame;
+import model.SpectranglePlayer;
+import network.Database;
+import network.Peer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ServerDatabase implements Database {
+
+    private List<Peer> peers;
+    private List<SpectranglePlayer> players;
+    private Map<Peer, SpectranglePlayer> users;
+    private List<SpectrangleGame> games;
+
+
     public ServerDatabase() {
         this.peers = new ArrayList<Peer>();
-        this.players = new ArrayList<Player>();
-        this.users = new HashMap<Peer, Player>();
-        this.games = new ArrayList<Game>();
+        this.players = new ArrayList<SpectranglePlayer>();
+        this.users = new HashMap<Peer, SpectranglePlayer>();
+        this.games = new ArrayList<SpectrangleGame>();
     }
 
-    //***************************************************
-    //---------------------QUERIES-----------------------
-    //***************************************************
-    public synchronized Player getPlayer(Peer peer) {
+
+    public synchronized SpectranglePlayer getPlayer(Peer peer) {
         return this.users.get(peer);
     }
 
-    public synchronized void insertGame(Game game) {
+    public synchronized void insertGame(SpectrangleGame game) {
         this.games.add(game);
     }
 
-    public synchronized void removeGame(Game game) {
+    public synchronized void removeGame(SpectrangleGame game) {
         this.games.remove(game);
     }
 
@@ -42,7 +48,7 @@ public class ServerDatabase implements Database {
         this.peers.remove(peer);
     }
 
-    public synchronized void insertUser(Peer peer, Player player) throws PeerNotFoundException {
+    public synchronized void insertUser(Peer peer, SpectranglePlayer player) throws PeerNotFoundException {
         if (!this.peers.contains(peer)) {
             throw new PeerNotFoundException("Peer not found!");
         }
@@ -54,20 +60,18 @@ public class ServerDatabase implements Database {
         this.users.remove(peer);
     }
 
-    public synchronized List<Player> getIdlePlayers() {
-        List<Player> idlePlayers = new ArrayList<Player>();
+    public synchronized List<SpectranglePlayer> getIdlePlayers() {
+        List<SpectranglePlayer> idlePlayers = new ArrayList<SpectranglePlayer>();
 
-        for (Player player : this.players) {
-            if (player.getGame() == null && player.getNickname() != null) {
+        for (SpectranglePlayer player : this.players) {
+            if (player.getGame() == null && player.getPlayerName() != null) {
                 idlePlayers.add(player);
             }
         }
         return idlePlayers;
     }
 
-    //***************************************************
-    //---------------------GETTERS/SETTERS---------------
-    //***************************************************
+
     public synchronized List<Peer> getPeers() {
         return peers;
     }
@@ -76,12 +80,13 @@ public class ServerDatabase implements Database {
         this.peers = peers;
     }
 
-    public List<Player> getPlayers() {
+    public List<SpectranglePlayer> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(List<SpectranglePlayer> players) {
         this.players = players;
     }
+}
 
 

@@ -46,6 +46,13 @@ public class SpectrangleBoardSpace {
         this.vertical = vertical;
     }
 
+    public void setLeft(SpectrangleBoardSpace left) {
+        this.left = left;
+    }
+
+    public void setRight(SpectrangleBoardSpace right) {
+        this.right = right;
+    }
 
     public int getIndex() {
         return index;

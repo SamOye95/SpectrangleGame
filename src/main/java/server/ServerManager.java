@@ -1,24 +1,19 @@
 package server;
 
+import model.SpectrangleGame;
+import model.SpectranglePlayer;
+
 import java.util.List;
 
 public class ServerManager implements Runnable {
-    //***************************************************
-    //---------------------ATTRIBUTES--------------------
-    //***************************************************
+
     private ServerDatabase database;
 
-    //***************************************************
-    //---------------------CONSTRUCTORS------------------
-    //***************************************************
     public ServerManager(ServerDatabase database) {
         this.database = database;
     }
 
-    //***************************************************
-    //---------------------THREAD------------------------
-    //***************************************************
-    @Override
+
     public void run() {
         while (true) {
 
@@ -31,15 +26,13 @@ public class ServerManager implements Runnable {
         }
     }
 
-    //***************************************************
-    //---------------------PRIVATE METHODS---------------
-    //***************************************************
-    private void createGames() {
-        List<Player> players = this.database.getIdlePlayers();
 
-        if (players.size() >= Game.MIN_PLAYERS) {
-            Player host = players.get(0);
-            Game game = new Game(players, host);
+    private void createGames() {
+        List<SpectranglePlayer> players = this.database.getIdlePlayers();
+
+        if (players.size() >= SpectrangleGame.minPlayers) {
+            SpectranglePlayer host = players.get(0);
+            SpectrangleGame game = new SpectrangleGame(players, host);
 
             game.start();
             this.database.insertGame(game);

@@ -1,8 +1,9 @@
 package client;
 
 import network.Peer;
+import network.Setup;
 
-public class ClientPeer {
+public class ClientPeer implements Setup {
 
 
     private ClientDatabase database;
@@ -13,7 +14,6 @@ public class ClientPeer {
     }
 
 
-    @Override
     public void run() {
 
     }

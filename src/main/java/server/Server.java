@@ -1,7 +1,10 @@
 package server;
 
 import controller.SpectrangleController;
+import controller.SpectrangleServerGameController;
 import controller.SpectrangleServerPlayerController;
+import network.Messenger;
+import network.Peer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-public class Server {
-    public class Server implements Observer {
+
+
+public class Server implements Observer {
 
         private Integer port;
         private ServerSocket socket;
@@ -23,9 +27,9 @@ public class Server {
             this.socket = new ServerSocket(this.port);
 
             //Controller list
-            List<SpectrangleController> controllers = new ArrayList<Controller>();
+            List<SpectrangleController> controllers = new ArrayList<SpectrangleController>();
             controllers.add(new SpectrangleServerPlayerController(this.database));
-            controllers.add(new GameController(this.database));
+            controllers.add(new SpectrangleServerGameController(this.database));
 
             //Message handler
             this.messenger = new Messenger(controllers);
@@ -61,8 +65,7 @@ public class Server {
         }
 
 
-        @Override
-        public void update(Observable arg0, Object arg1) {
+    public void update(Observable arg0, Object arg1) {
             Peer peer = (Peer) arg0;
             String msg = (String) arg1;
 
@@ -73,4 +76,4 @@ public class Server {
         }
     }
 
-}
+

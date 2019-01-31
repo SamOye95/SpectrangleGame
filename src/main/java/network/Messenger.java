@@ -1,6 +1,7 @@
 package network;
 
 import controller.SpectrangleController;
+import model.SpectranglePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +20,8 @@ public class Messenger {
         this.statusCodes.add(404);
     }
 
-    public static void broadcast(List<Player> players, String msg) {
-        for (Player player : players) {
+    public static void broadcast(List<SpectranglePlayer> players, String msg) {
+        for (SpectranglePlayer player : players) {
             player.getPeer().write(msg);
         }
     }
@@ -33,7 +34,7 @@ public class Messenger {
             return;
         }
 
-        for (Controller controller : this.controllers) {
+        for (SpectrangleController controller : this.controllers) {
             if (controller.hasMethod(msg.getCommand())) {
                 controller.forward(peer, msg);
             }

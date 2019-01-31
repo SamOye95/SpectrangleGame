@@ -4,7 +4,7 @@ import network.Peer;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Random;
 
 public class SpectranglePlayer {
 
@@ -39,19 +39,22 @@ public class SpectranglePlayer {
     public List<SpectranglePiece> takeMaximumSpectranglePieces() {
         List<SpectranglePiece> spectranglePieces = new ArrayList<SpectranglePiece>();
         while (this.spectranglePieces.size() < 4) {
-            spectranglePieces.add(this.takeSpectralPiece());
+            spectranglePieces.add(this.takeSpectranglePiece());
 
         }
         return spectranglePieces;
     }
 
     public SpectranglePiece takeSpectranglePiece() {
-        if (this.spectranglePieces.size() >= 4) {
+        int numberOfPieces, index;
+
+        numberOfPieces = this.spectranglePieces.size();
+        if (numberOfPieces == 0) {
             return null;
         }
 
-        SpectranglePiece spectranglePiece = this.game.getBag().getBag().takeSpectranglePiece();
-        this.spectranglePieces.add(spectranglePiece)
+        index = new Random().nextInt(this.spectranglePieces.size());
+        return this.spectranglePieces.remove(index);
     }
 
     public SpectranglePiece takeSpectralPiece(String spectranglePiece) {
@@ -66,7 +69,7 @@ public class SpectranglePlayer {
     }
 
     public SpectranglePiece lastSpectranglePiece() {
-        return this.spectranglePieces.get(this.spectranglePieces.size() - 1)
+        return this.spectranglePieces.get(this.spectranglePieces.size() - 1);
     }
 
     public int placeSpectranglePiece(int index, String spectranglePieceString) {
@@ -98,7 +101,7 @@ public class SpectranglePlayer {
         SpectranglePiece spectranglePiece = null;
 
         for (SpectranglePiece sp : this.spectranglePieces) {
-            if (sp.isSamePiece()) {
+            if (sp.isEquivalent(spectranglePieceString)) {
                 spectranglePiece = sp;
                 break;
             }
@@ -117,7 +120,7 @@ public class SpectranglePlayer {
         SpectranglePiece spectranglePiece = null;
 
         for (SpectranglePiece sp : this.spectranglePieces) {
-            if (sp.isSamePiece(oldPiece)) {
+            if (sp.isEquivalent(oldPiece)) {
                 spectranglePiece = sp;
                 break;
             }
