@@ -32,7 +32,9 @@ public class SpectrangleGame implements Runnable {
 
     }
 
-
+    /**
+     * Starts game
+     */
     public void start() {
         this.thread = new Thread(this);
         this.thread.start();
@@ -137,18 +139,18 @@ public class SpectrangleGame implements Runnable {
         this.players.remove(player);
     }
 
-    private void init() {
-        this.board = new SpectrangleBoard();
-        this.bag = new RandomSpectrangleBag();
-        this.status = SpectranglePlayerStatus.NOT_STARTED;
-
-        for (SpectranglePlayer player : this.players) {
-            player.setGame(this);
-            player.setScore(0);
-        }
-
-        this.turn = players.get(0);
-    }
+//    private void init() {
+//        this.board = new SpectrangleBoard();
+//        this.bag = new RandomSpectrangleBag();
+//        this.status = SpectranglePlayerStatus.NOT_STARTED;
+//
+//        for (SpectranglePlayer player : this.players) {
+//            player.setGame(this);
+//            player.setScore(0);
+//        }
+//
+//        this.turn = players.get(0);
+//    }
 
 
     public RandomSpectrangleBag getBag() {

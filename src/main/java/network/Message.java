@@ -8,7 +8,7 @@ public class Message {
 
     private String command;
     private List<String> args;
-    private Integer statusCode;
+    private Integer errorCode;
 
 
     public Message(String msg) {
@@ -16,7 +16,7 @@ public class Message {
         this.command = args.remove(0);
 
         try {
-            this.statusCode = Integer.parseInt(command);
+            this.errorCode = Integer.parseInt(command);
         } catch (NumberFormatException e) {
         }
     }
@@ -43,12 +43,12 @@ public class Message {
         this.args = args;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Integer getErrorCode() {
+        return errorCode;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
     }
 
 }

@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 public class SpectrangleBoardPrinter {
     private static List<Integer> bonuses = Arrays.asList(1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 4, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1, 3, 1);
     private static List<Integer> values = Arrays.asList(5, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    private static List<SpectranglePieceColor> vertical = Arrays.asList(SpectranglePieceColor.RED, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    private static List<SpectranglePieceColor> left = Arrays.asList(SpectranglePieceColor.GREEN, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    private static List<SpectranglePieceColor> right = Arrays.asList(SpectranglePieceColor.BLUE, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static List<SpectranglePieceColor> vertical = Arrays.asList(SpectranglePieceColor.R, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static List<SpectranglePieceColor> left = Arrays.asList(SpectranglePieceColor.G, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static List<SpectranglePieceColor> right = Arrays.asList(SpectranglePieceColor.B, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
     public static void main(String[] args) {
         // This is an example of how to use the function below.
@@ -70,6 +70,7 @@ public class SpectrangleBoardPrinter {
                 "                           /   {f02}   \\\n" +
                 "                          /---------\\\n" +
                 "                         / \\   {f22}   / \\\n" +
+
                 "                        / {f1b} \\{f20}{f2v} {f21}/ {f3b} \\\n" +
                 "                       /{f10}{f1v} {f11}\\ {f2b} /{f30}{f3v} {f31}\\\n" +
                 "                      /   {f12}   \\ /   {f32}   \\\n" +

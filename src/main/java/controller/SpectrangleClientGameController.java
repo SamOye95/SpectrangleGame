@@ -190,7 +190,7 @@ public class SpectrangleClientGameController extends SpectrangleController {
         SpectranglePlayer player = database.getPlayer();
 
         for (SpectranglePiece spectranglePiece : player.getSpectranglePieces()) {
-            if (spectranglePiece.isEquivalent(tileStr)) {
+            if (spectranglePiece.isSamePiece(tileStr)) {
                 spectranglePiece.rotate();
             }
         }

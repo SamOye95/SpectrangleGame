@@ -19,7 +19,11 @@ public class SpectranglePlayer {
     private SpectrangleLobby lobby;
     private Peer peer;
 
-
+    /**
+     * Constructs a player
+     *
+     * @param playerName
+     */
     public SpectranglePlayer(String playerName) {
         this.playerName = playerName;
         this.spectranglePieces = new ArrayList<SpectranglePiece>();
@@ -36,6 +40,11 @@ public class SpectranglePlayer {
 
 
     }
+
+    /**
+     * return a list of the maximum pieces
+     * @return
+     */
     public List<SpectranglePiece> takeMaximumSpectranglePieces() {
         List<SpectranglePiece> spectranglePieces = new ArrayList<SpectranglePiece>();
         while (this.spectranglePieces.size() < 4) {
@@ -45,9 +54,14 @@ public class SpectranglePlayer {
         return spectranglePieces;
     }
 
+    /**
+     * Randomly takes spectrangle piece
+     * @return
+     */
     public SpectranglePiece takeSpectranglePiece() {
         int numberOfPieces, index;
 
+        //checks if there are remaining pieces
         numberOfPieces = this.spectranglePieces.size();
         if (numberOfPieces == 0) {
             return null;
@@ -68,6 +82,10 @@ public class SpectranglePlayer {
         return sp;
     }
 
+    /**
+     * returns the last piece
+     * @return
+     */
     public SpectranglePiece lastSpectranglePiece() {
         return this.spectranglePieces.get(this.spectranglePieces.size() - 1);
     }
@@ -101,7 +119,7 @@ public class SpectranglePlayer {
         SpectranglePiece spectranglePiece = null;
 
         for (SpectranglePiece sp : this.spectranglePieces) {
-            if (sp.isEquivalent(spectranglePieceString)) {
+            if (sp.isSamePiece(spectranglePieceString)) {
                 spectranglePiece = sp;
                 break;
             }
@@ -120,7 +138,7 @@ public class SpectranglePlayer {
         SpectranglePiece spectranglePiece = null;
 
         for (SpectranglePiece sp : this.spectranglePieces) {
-            if (sp.isEquivalent(oldPiece)) {
+            if (sp.isSamePiece(oldPiece)) {
                 spectranglePiece = sp;
                 break;
             }

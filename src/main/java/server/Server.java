@@ -11,10 +11,9 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
-
-public class Server implements Observer {
+@Deprecated
+public class Server {
 
         private Integer port;
         private ServerSocket socket;
@@ -41,21 +40,23 @@ public class Server implements Observer {
             Peer peer;
 
             try {
-                server = new Server(9091);
+                server = new Server(, 8080);
             } catch (IOException e) {
                 System.out.println("Unable to start the server. Terminating!");
                 return;
             }
 
+            //Starts new thread
             manager = new ServerManager(server.database);
             new Thread(manager).start();
+            System.out.println("Server up and running.");
 
             while (true) {
                 try {
                     peer = new Peer(server.socket.accept(), server.messenger, new ServerPeer(server.database));
-                    peer.addObserver(server);
 
                     server.database.insertPeer(peer);
+                    System.out.println("New client connected!");
                 } catch (IOException e) {
                     System.out.println("Client failed to connect. Terminating!");
                     return;

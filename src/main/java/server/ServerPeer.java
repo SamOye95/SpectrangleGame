@@ -16,6 +16,7 @@ public class ServerPeer implements Setup {
     }
 
 
+    @Override
     public void run() {
         SpectranglePlayer player = new SpectranglePlayer(null, this.peer);
 

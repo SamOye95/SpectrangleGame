@@ -24,7 +24,7 @@ public class SpectrangleGameView {
 
             System.out.println(player.getPlayerName() + "-Score:" + player.getScore());
             {
-                SpectranglePiece.draw(player.getSpectranglePieces());
+                SpectranglePiece.take(player.getSpectranglePieces());
 
             }
         }

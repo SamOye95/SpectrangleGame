@@ -11,12 +11,21 @@ public class SpectrangleBoard {
     public static final int LENGTH = 36;
     private List<SpectrangleBoardSpace> spaces;
 
-
+    /**
+     * Constructs a new board
+     */
     public SpectrangleBoard() {
         this.spaces = new ArrayList<SpectrangleBoardSpace>();
         this.init();
     }
 
+    /**
+     * Places a piece on the board and returns the points from that move.
+     *
+     * @param piece
+     * @param index
+     * @return points
+     */
     public int placeSpectranglePiece(SpectranglePiece piece, int index) {
         SpectrangleBoardSpace space = null;
         Integer points = 0;
@@ -34,12 +43,12 @@ public class SpectrangleBoard {
 
         edges = this.canBePlaced(space, piece);
         if (edges == 0) {
-            piece.invert();
+            piece.invertPiece();
             edges = this.canBePlaced(space, piece);
         }
 
         if (edges == 0) {
-            piece.invert();
+            piece.invertPiece();
             return -1;
         }
 
@@ -49,14 +58,19 @@ public class SpectrangleBoard {
         return points;
     }
 
-
+    /**
+     * This checks if the piece can be placed in a space.
+     * @param space
+     * @param piece
+     * @return
+     */
     public int canBePlaced(SpectrangleBoardSpace space, SpectranglePiece piece) {
         int edges = 0;
 
         if (this.isEmpty()) {
 
             if (!piece.getSpectranglePieceOrientation().equals(space.getOrientation())) {
-                piece.invert();
+                piece.invertPiece();
             }
 
             return 1;
@@ -69,7 +83,7 @@ public class SpectrangleBoard {
         SpectrangleBoardSpace left;
         if ((left = space.getLeft()) != null) {
             if (left.getSpectranglePiece() != null) {
-                if (left.getSpectranglePiece().getColorRight() == piece.getColorLeft() || piece.getColorLeft() == SpectranglePieceColor.WHITE || left.getSpectranglePiece().getColorRight() == SpectranglePieceColor.WHITE) {
+                if (left.getSpectranglePiece().getColorRight() == piece.getColorLeft() || piece.getColorLeft() == SpectranglePieceColor.W || left.getSpectranglePiece().getColorRight() == SpectranglePieceColor.W) {
                     edges++;
                 }
             }
@@ -78,7 +92,7 @@ public class SpectrangleBoard {
         SpectrangleBoardSpace right;
         if ((right = space.getRight()) != null) {
             if (right.getSpectranglePiece() != null) {
-                if (right.getSpectranglePiece().getColorLeft() == piece.getColorRight() || piece.getColorRight() == SpectranglePieceColor.WHITE || right.getSpectranglePiece().getColorLeft() == SpectranglePieceColor.WHITE) {
+                if (right.getSpectranglePiece().getColorLeft() == piece.getColorRight() || piece.getColorRight() == SpectranglePieceColor.W || right.getSpectranglePiece().getColorLeft() == SpectranglePieceColor.W) {
                     edges++;
                 }
             }
@@ -88,7 +102,7 @@ public class SpectrangleBoard {
         SpectrangleBoardSpace vertical;
         if ((vertical = space.getVertical()) != null) {
             if (vertical.getSpectranglePiece() != null) {
-                if (vertical.getSpectranglePiece().getColorVertical() == piece.getColorVertical() || piece.getColorVertical() == SpectranglePieceColor.WHITE || vertical.getSpectranglePiece().getColorVertical() == SpectranglePieceColor.WHITE) {
+                if (vertical.getSpectranglePiece().getColorVertical() == piece.getColorVertical() || piece.getColorVertical() == SpectranglePieceColor.W || vertical.getSpectranglePiece().getColorVertical() == SpectranglePieceColor.W) {
                     edges++;
                 }
             }
@@ -96,6 +110,12 @@ public class SpectrangleBoard {
 
         return edges;
     }
+
+    /**
+     * This checks if the piece can be placed in a space.
+     * @param piece
+     * @return
+     */
 
     public boolean canBePlaced(SpectranglePiece piece) {
         if (this.isEmpty()) {
@@ -140,22 +160,21 @@ public class SpectrangleBoard {
         return SpectrangleBoardPrinter.getBoardString(values, vertical, left, right);
     }
 
-
+    /**
+     * This method initialises a new space ,sets the orientation and sets the index multiplier (bonus point)
+     */
     private void init() {
         SpectrangleBoardSpace space;
         for (int i = 0; i < SpectrangleBoard.LENGTH; i++) {
 
-            //Initialize a new space
             space = new SpectrangleBoardSpace();
             space.setSpectranglePiece(null);
             space.setIndex(i);
 
-            //Set the orientation
             if ((rowOfIndex(i) + columnOfIndex(i)) % 2 == 1)
                 space.setOrientation(SpectranglePieceOrientation.DOWN);
             else space.setOrientation(SpectranglePieceOrientation.UP);
 
-            //Setting the bonus
             if (i == 11 || i == 13 || i == 20) {
                 space.setMultiplier(4);
             } else if (i == 2 || i == 26 || i == 34) {
@@ -198,8 +217,11 @@ public class SpectrangleBoard {
         }
     }
 
-    public int coordToIndex(int row, int col) {
-        return (row * row) + row + col;
+    /**
+     * This maps board coordinates to a multiplier index
+     */
+    public int mapsCoordinatesToIndex(int r, int c) {
+        return (r * r) + r + c;
     }
 
     public int rowOfIndex(int x) {
@@ -216,14 +238,14 @@ public class SpectrangleBoard {
         if (x < r * (r + 1)) {
             int i = 0;
             while (i >= (-r)) {
-                if (coordToIndex(r, i) == x)
+                if (mapsCoordinatesToIndex(r, i) == x)
                     return i;
                 i--;
             }
         } else {
             int i = 0;
             while (i <= r) {
-                if (coordToIndex(r, i) == x)
+                if (mapsCoordinatesToIndex(r, i) == x)
                     return i;
                 i++;
             }
@@ -231,6 +253,12 @@ public class SpectrangleBoard {
         return -15;
     }
 
+    /**
+     * returns the boardspace of a coordinate
+     * @param r
+     * @param c
+     * @return
+     */
     public SpectrangleBoardSpace getSpectrangleBoardSpaceOfCoord(int r, int c) {
 
         for (SpectrangleBoardSpace s : this.spaces) {
@@ -240,6 +268,9 @@ public class SpectrangleBoard {
         return null;
     }
 
+    /**
+     * Checks if the board is empty
+     */
     public boolean isEmpty() {
         for (SpectrangleBoardSpace space : this.spaces) {
             if (space.getSpectranglePiece() != null) {
@@ -247,10 +278,6 @@ public class SpectrangleBoard {
             }
         }
         return true;
-    }
-
-    public List<SpectrangleBoardSpace> getSpectrangleBoardSpaces() {
-        return spaces;
     }
 
 }
