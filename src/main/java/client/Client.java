@@ -43,7 +43,7 @@ public class Client {
 
     public static void main(String args[]) throws InterruptedException {
         try {
-            Client client = new Client("120.0.0.1", 8080);
+            Client client = new Client("localhost", 8081);
             client.database.getInputThread().begin();
 
         } catch (UnknownHostException e) {

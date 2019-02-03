@@ -14,6 +14,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
+
 public class Server implements Observer {
 
         private Integer port;
@@ -28,7 +29,7 @@ public class Server implements Observer {
             this.socket = new ServerSocket(this.port);
 
             //Controller list
-            List<SpectrangleController> controllers = new ArrayList<SpectrangleController>();
+            List<SpectrangleController> controllers = new ArrayList<>();
             controllers.add(new SpectrangleServerPlayerController(this.database));
             controllers.add(new SpectrangleServerGameController(this.database));
 
@@ -42,7 +43,7 @@ public class Server implements Observer {
             Peer peer;
 
             try {
-                server = new Server(8080);
+                server = new Server(8081);
             } catch (IOException e) {
                 System.out.println("Unable to start the server. Terminating!");
                 return;
