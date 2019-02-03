@@ -16,12 +16,12 @@ public class SpectrangleServerGameController extends SpectrangleController {
 
     @Override
     public void forward(Peer peer, Message msg) {
-        switch (msg.getCommand()) {
-            case "placeTile":
-                this.placeTile(peer, msg.getArgs().get(0), msg.getArgs().get(1));
+        switch (msg.getCommand().toLowerCase()) {
+            case "placePiece":
+                this.placePiece(peer, msg.getArgs().get(0), msg.getArgs().get(1));
                 break;
-            case "switchTile":
-                this.switchTile(peer, msg.getArgs().get(0));
+            case "switchPiece":
+                this.switchPiece(peer, msg.getArgs().get(0));
                 break;
             case "skipMove":
                 this.skipMove(peer);
@@ -35,7 +35,7 @@ public class SpectrangleServerGameController extends SpectrangleController {
     }
 
 
-    public void placeTile(Peer peer, String indexStr, String tileStr) {
+    public void placePiece(Peer peer, String indexStr, String tileStr) {
         Integer index;
 
         try {
@@ -67,7 +67,7 @@ public class SpectrangleServerGameController extends SpectrangleController {
         }
     }
 
-    public void switchTile(Peer peer, String tileStr) {
+    public void switchPiece(Peer peer, String tileStr) {
         ServerDatabase database = (ServerDatabase) this.getDatabase();
         SpectranglePlayer player = database.getPlayer(peer);
 
@@ -81,7 +81,6 @@ public class SpectrangleServerGameController extends SpectrangleController {
                 peer.write("404 You don't have that tile or it can be played. Try again.");
                 break;
             default:
-                Messenger.broadcast(player.getGame().getPlayers(), "switchedTile " + player.getPlayerName() + " " + tileStr + " " + player.lastSpectranglePiece().toString());
                 break;
         }
     }
@@ -97,7 +96,6 @@ public class SpectrangleServerGameController extends SpectrangleController {
                 peer.write("403 It's either not your turn or you can place a tile.");
                 break;
             default:
-                Messenger.broadcast(player.getGame().getPlayers(), "skippedMove " + player.getPlayerName());
                 break;
         }
     }
@@ -112,7 +110,6 @@ public class SpectrangleServerGameController extends SpectrangleController {
         }
 
         player.leaveGame();
-        Messenger.broadcast(game.getPlayers(), "players " + game.getPlayersStr());
 
     }
 }

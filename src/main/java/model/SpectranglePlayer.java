@@ -1,12 +1,13 @@
 package model;
 
+import network.Attribute;
 import network.Peer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Observable;
 
-public class SpectranglePlayer {
+public abstract class SpectranglePlayer extends Observable {
 
 
     private SpectrangleGame game;
@@ -59,16 +60,18 @@ public class SpectranglePlayer {
      * @return
      */
     public SpectranglePiece takeSpectranglePiece() {
-        int numberOfPieces, index;
-
-        //checks if there are remaining pieces
-        numberOfPieces = this.spectranglePieces.size();
-        if (numberOfPieces == 0) {
+        if (this.spectranglePieces.size() >= 4) {
             return null;
         }
 
-        index = new Random().nextInt(this.spectranglePieces.size());
-        return this.spectranglePieces.remove(index);
+        SpectranglePiece piece = this.game.getBag().takeSpectranglePiece();
+        this.spectranglePieces.add(piece);
+
+        Attribute attribute = new Attribute("drawnTile");
+        attribute.addPlayer(this);
+        attribute.addTile(piece);
+
+        return piece;
     }
 
     public SpectranglePiece takeSpectralPiece(String spectranglePiece) {
@@ -92,6 +95,7 @@ public class SpectranglePlayer {
 
     public int placeSpectranglePiece(int index, String spectranglePieceString) {
         SpectranglePiece spectranglePiece = null;
+        int status;
 
         for (SpectranglePiece sp : this.spectranglePieces) {
             if (spectranglePieceString.equals(sp.toString())) {
@@ -111,8 +115,16 @@ public class SpectranglePlayer {
             spectranglePiece.rotate();
         }
 
-        return this.game.placeSpectranglePiece(this, index, spectranglePiece);
+        status = this.game.placeSpectranglePiece(this, index, spectranglePiece);
+        if (status == 0) {
+            Attribute attr = new Attribute("placedTile");
+            attr.addPlayer(this);
+            attr.addIndex(index);
+            attr.addTile(spectranglePiece);
+            this.warnObservers(attr);
+        }
 
+        return status;
     }
 
     public int switchPiece(String spectranglePieceString) {
@@ -136,6 +148,7 @@ public class SpectranglePlayer {
 
     public int switchPiece(String oldPiece, String newPiece) {
         SpectranglePiece spectranglePiece = null;
+        int status;
 
         for (SpectranglePiece sp : this.spectranglePieces) {
             if (sp.isSamePiece(oldPiece)) {
@@ -148,7 +161,17 @@ public class SpectranglePlayer {
             return 404;
         }
 
-        return this.game.switchPiece(this, spectranglePiece, newPiece);
+        status = this.game.switchPiece(this, spectranglePiece);
+
+        if (status == 0) {
+            Attribute attr = new Attribute("switchedTile");
+            attr.addTile(spectranglePiece);
+            attr.addTile(this.lastSpectranglePiece());
+            attr.addPlayer(this);
+            this.warnObservers(attr);
+        }
+
+        return status;
     }
 
     public void addPoints(int points) {
@@ -156,12 +179,26 @@ public class SpectranglePlayer {
     }
 
     public int skipMove() {
-        return this.game.skipMove(this);
+        int status;
+        status = this.game.skipMove(this);
+
+        if (status == 0) {
+            Attribute attr = new Attribute("skippedMove");
+            attr.addPlayer(this);
+            this.warnObservers(attr);
+        }
+
+        return status;
     }
 
     public void leaveGame() {
         this.game.leaveGame(this);
+        Attribute attr = new Attribute("playerLeft");
+        attr.addPlayer(this);
+        this.warnObservers(attr);
     }
+
+    public abstract void requestMove();
 
     public SpectrangleGame getGame() {
         return game;
@@ -217,6 +254,11 @@ public class SpectranglePlayer {
 
     public void setSpectranglePieces(List<SpectranglePiece> spectranglePieces) {
         this.spectranglePieces = spectranglePieces;
+    }
+
+    public void warnObservers(Attribute attr) {
+        this.setChanged();
+        this.notifyObservers(attr);
     }
 }
 

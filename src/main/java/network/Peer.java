@@ -13,6 +13,14 @@ public class Peer extends Observable implements Runnable {
     private Messenger messenger;
     private BufferedReader reader;
     private PrintWriter writer;
+
+    /**
+     * @param socket
+     * @param messenger
+     * @param setup
+     * @requires (socket ! = null) && (messenger != null) &&(Setup != null)
+     * Constructor. creates a peer object based in the given parameters.
+     */
     public Peer(Socket socket, Messenger messenger, Setup setup) {
         this.socket = socket;
         this.messenger = messenger;

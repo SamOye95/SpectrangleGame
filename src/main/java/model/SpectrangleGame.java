@@ -1,11 +1,14 @@
 package model;
 
+import javafx.beans.Observable;
+import network.Attribute;
 import network.Messenger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observer;
 
-public class SpectrangleGame implements Runnable {
+public class SpectrangleGame implements Runnable, Observer {
 
     public static final int minPlayers = 2;
     public static final int maxPlayers = 4;
@@ -41,6 +44,11 @@ public class SpectrangleGame implements Runnable {
         this.status = SpectranglePlayerStatus.RUNNING;
     }
 
+    /**
+     * @return
+     * @pure
+     * @ensures (! \ result.equals ( null))
+     */
     public String getPlayersStr() {
         String str = "";
         for (SpectranglePlayer player : this.players) {
@@ -50,6 +58,13 @@ public class SpectrangleGame implements Runnable {
         return str.trim();
     }
 
+    /**
+     * @param player
+     * @param index
+     * @param piece
+     * @return
+     * @requires this.getPlayers().contains(player) && player.getSpectranglePieces.contains(piece)
+     */
     public int placeSpectranglePiece(SpectranglePlayer player, int index, SpectranglePiece piece) {
         Integer points;
 
@@ -185,7 +200,7 @@ public class SpectrangleGame implements Runnable {
         this.turn = turn;
     }
 
-
+    @Override
     public void run() {
 
         //FIRST STEP - TELL ALL PLAYERS THAT THE GAME STARTED AND IN WHICH ORDER THE PLAYERS ARE
@@ -214,11 +229,53 @@ public class SpectrangleGame implements Runnable {
                     this.status = SpectranglePlayerStatus.FINISHED;
                     Messenger.broadcast(this.players, "end");
                     break;
+                } else {
+                    player.takeSpectranglePiece();
                 }
-
-                SpectranglePiece piece = player.takeSpectranglePiece();
-                Messenger.broadcast(this.players, "drawnTile " + player.getPlayerName() + " " + piece.toString());
             }
         }
     }
+
+    @Override
+    public void update(Observable arg0, Object arg1) {
+        Attribute attr = (Attribute) arg1;
+        SpectranglePlayer player = attr.getPlayers().get(0);
+        SpectranglePiece piece;
+
+        if (player.getPeer() == null) {
+            return;
+        }
+
+        switch (attr.getAction()) {
+            case "placedTile":
+                Integer index = attr.getIndex().get(0);
+                piece = attr.getTiles().get(0);
+                Messenger.broadcast(this.players, "placedTile " + player.getPlayerName() + " " + index + " " + piece.toString());
+                break;
+            case "drawnTile":
+                piece = attr.getTiles().get(0);
+                Messenger.broadcast(this.players, "drawnTile " + player.getPlayerName() + " " + piece.toString());
+                break;
+            case "switchedTile":
+                SpectranglePiece oldTile = attr.getTiles().get(0);
+                SpectranglePiece newTile = attr.getTiles().get(1);
+                Messenger.broadcast(this.players, "switchedTile " + player.getPlayerName() + " " + oldTile + " " + newTile);
+            case "skippedMove":
+                Messenger.broadcast(this.players, "skippedMove " + player.getPlayerName());
+                break;
+            case "playerLeft":
+                Messenger.broadcast(this.players, "players " + this.getPlayersStr());
+                break;
+            default:
+                break;
+        }
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

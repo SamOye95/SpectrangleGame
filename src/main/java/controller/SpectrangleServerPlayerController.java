@@ -17,8 +17,8 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
 
     @Override
     public void forward(Peer peer, Message msg) {
-        switch (msg.getCommand()) {
-            case "nickname":
+        switch (msg.getCommand().toLowerCase()) {
+            case "playerName":
                 this.nickname(peer, msg.getStringArgs());
                 break;
             case "features":
@@ -39,13 +39,13 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
         }
 
         if (player.getGame() != null) {
-            peer.write("403 You're not allowed to change your nickname during the game.");
+            peer.write("403 You're not allowed to change your playerName during the game.");
             return;
         }
 
         for (SpectranglePlayer p : database.getPlayers()) {
             if (nickname.equals(p.getPlayerName())) {
-                peer.write("403 That nickname has already been chosen. Pick another one");
+                peer.write("403 That playerName has already been chosen. Pick another one");
                 return;
             }
         }

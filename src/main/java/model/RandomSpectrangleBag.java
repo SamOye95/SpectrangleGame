@@ -36,10 +36,10 @@ public class RandomSpectrangleBag implements SpectrangleBag {
      */
 
 
-    public SpectranglePiece takeSpectranglePiece() throws EmptyBagException {
+    public SpectranglePiece takeSpectranglePiece() {
 
         if (pieces.size() == 0) {
-            throw new EmptyBagException();
+            return null;
         }
 
         return pieces.remove(random.nextInt(getTheNumberOfRemainingPieces()));

@@ -11,14 +11,16 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
-@Deprecated
-public class Server {
+
+public class Server implements Observer {
 
         private Integer port;
         private ServerSocket socket;
         private ServerDatabase database;
         private Messenger messenger;
+
 
         public Server(Integer port) throws IOException {
             this.port = port;
@@ -40,7 +42,7 @@ public class Server {
             Peer peer;
 
             try {
-                server = new Server(, 8080);
+                server = new Server(8080);
             } catch (IOException e) {
                 System.out.println("Unable to start the server. Terminating!");
                 return;
@@ -54,7 +56,7 @@ public class Server {
             while (true) {
                 try {
                     peer = new Peer(server.socket.accept(), server.messenger, new ServerPeer(server.database));
-
+                    peer.addObserver(server);
                     server.database.insertPeer(peer);
                     System.out.println("New client connected!");
                 } catch (IOException e) {
@@ -65,7 +67,7 @@ public class Server {
 
         }
 
-
+    @Override
     public void update(Observable arg0, Object arg1) {
             Peer peer = (Peer) arg0;
             String msg = (String) arg1;

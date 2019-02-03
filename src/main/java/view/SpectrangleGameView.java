@@ -13,7 +13,7 @@ public class SpectrangleGameView {
 
     }
 
-    public void take() {
+    public void take(boolean showEntry) {
         this.clear();
 
         SpectrangleBoard board = this.game.getBoard();
@@ -29,7 +29,7 @@ public class SpectrangleGameView {
             }
         }
 
-        System.out.print(">");
+        if (showEntry) System.out.print(">");
     }
 
     private void clear() {

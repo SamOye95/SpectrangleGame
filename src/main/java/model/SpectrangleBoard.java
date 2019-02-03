@@ -66,6 +66,7 @@ public class SpectrangleBoard {
      */
     public int canBePlaced(SpectrangleBoardSpace space, SpectranglePiece piece) {
         int edges = 0;
+        int matchedEdges = 0;
 
         if (this.isEmpty()) {
 
@@ -74,26 +75,29 @@ public class SpectrangleBoard {
             }
 
             return 1;
-        }
+        } else {
+            if (!piece.getSpectranglePieceOrientation().equals(space.getOrientation())) {
+                return 0;
+            }
 
-        if (!piece.getSpectranglePieceOrientation().equals(space.getOrientation())) {
-            return 0;
-        }
-
-        SpectrangleBoardSpace left;
-        if ((left = space.getLeft()) != null) {
-            if (left.getSpectranglePiece() != null) {
-                if (left.getSpectranglePiece().getColorRight() == piece.getColorLeft() || piece.getColorLeft() == SpectranglePieceColor.W || left.getSpectranglePiece().getColorRight() == SpectranglePieceColor.W) {
+            SpectrangleBoardSpace left;
+            if ((left = space.getLeft()) != null) {
+                if (left.getSpectranglePiece() != null) {
                     edges++;
+                    if (left.getSpectranglePiece().getColorRight() == piece.getColorLeft() || piece.getColorLeft() == SpectranglePieceColor.W || left.getSpectranglePiece().getColorRight() == SpectranglePieceColor.W) {
+                        matchedEdges++;
+                    }
                 }
             }
         }
 
+
         SpectrangleBoardSpace right;
         if ((right = space.getRight()) != null) {
             if (right.getSpectranglePiece() != null) {
+                edges++;
                 if (right.getSpectranglePiece().getColorLeft() == piece.getColorRight() || piece.getColorRight() == SpectranglePieceColor.W || right.getSpectranglePiece().getColorLeft() == SpectranglePieceColor.W) {
-                    edges++;
+                    matchedEdges++;
                 }
             }
         }
@@ -102,13 +106,19 @@ public class SpectrangleBoard {
         SpectrangleBoardSpace vertical;
         if ((vertical = space.getVertical()) != null) {
             if (vertical.getSpectranglePiece() != null) {
+                edges++;
+
                 if (vertical.getSpectranglePiece().getColorVertical() == piece.getColorVertical() || piece.getColorVertical() == SpectranglePieceColor.W || vertical.getSpectranglePiece().getColorVertical() == SpectranglePieceColor.W) {
-                    edges++;
+                    matchedEdges++;
                 }
             }
         }
 
-        return edges;
+        if (edges > matchedEdges) {
+            return 0;
+        }
+
+        return matchedEdges;
     }
 
     /**
