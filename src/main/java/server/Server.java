@@ -29,7 +29,7 @@ public class Server implements Observer {
             this.socket = new ServerSocket(this.port);
 
             //Controller list
-            List<SpectrangleController> controllers = new ArrayList<>();
+            List<SpectrangleController> controllers = new ArrayList<SpectrangleController>();
             controllers.add(new SpectrangleServerPlayerController(this.database));
             controllers.add(new SpectrangleServerGameController(this.database));
 
@@ -68,7 +68,7 @@ public class Server implements Observer {
 
         }
 
-    @Override
+
     public void update(Observable arg0, Object arg1) {
             Peer peer = (Peer) arg0;
             String msg = (String) arg1;

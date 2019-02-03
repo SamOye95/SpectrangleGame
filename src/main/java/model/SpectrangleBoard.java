@@ -290,4 +290,8 @@ public class SpectrangleBoard {
         return true;
     }
 
+    public List<SpectrangleBoardSpace> getBoardSpaces() {
+        return spaces;
+    }
+
 }

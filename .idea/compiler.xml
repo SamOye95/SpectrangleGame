@@ -9,8 +9,8 @@
         <module name="SpectrangleGame" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="9">
-      <module name="SpectrangleGame" target="9" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="SpectrangleGame" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
