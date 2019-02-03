@@ -1,12 +1,14 @@
 package model;
 
-import javafx.beans.Observable;
+
 import network.Attribute;
 import network.Messenger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Observer;
+
 
 public class SpectrangleGame implements Runnable, Observer {
 
@@ -154,18 +156,18 @@ public class SpectrangleGame implements Runnable, Observer {
         this.players.remove(player);
     }
 
-//    private void init() {
-//        this.board = new SpectrangleBoard();
-//        this.bag = new RandomSpectrangleBag();
-//        this.status = SpectranglePlayerStatus.NOT_STARTED;
-//
-//        for (SpectranglePlayer player : this.players) {
-//            player.setGame(this);
-//            player.setScore(0);
-//        }
-//
-//        this.turn = players.get(0);
-//    }
+    private void init() {
+        this.board = new SpectrangleBoard();
+        this.bag = new RandomSpectrangleBag();
+        this.status = SpectranglePlayerStatus.NOT_STARTED;
+
+        for (SpectranglePlayer player : this.players) {
+            player.setGame(this);
+            player.setScore(0);
+        }
+
+        this.turn = players.get(0);
+    }
 
 
     public RandomSpectrangleBag getBag() {
@@ -210,7 +212,7 @@ public class SpectrangleGame implements Runnable, Observer {
         for (SpectranglePlayer player : this.players) {
             List<SpectranglePiece> pieces = player.takeMaximumSpectranglePieces();
             for (SpectranglePiece piece : pieces) {
-                Messenger.broadcast(this.players, "drawnTile " + player.getPlayerName() + " " + piece.toString());
+                Messenger.broadcast(this.players, "takenPiece " + player.getPlayerName() + " " + piece.toString());
             }
         }
 
@@ -252,9 +254,9 @@ public class SpectrangleGame implements Runnable, Observer {
                 piece = attr.getTiles().get(0);
                 Messenger.broadcast(this.players, "placedTile " + player.getPlayerName() + " " + index + " " + piece.toString());
                 break;
-            case "drawnTile":
+            case "takenPiece":
                 piece = attr.getTiles().get(0);
-                Messenger.broadcast(this.players, "drawnTile " + player.getPlayerName() + " " + piece.toString());
+                Messenger.broadcast(this.players, "takenPiece " + player.getPlayerName() + " " + piece.toString());
                 break;
             case "switchedTile":
                 SpectranglePiece oldTile = attr.getTiles().get(0);

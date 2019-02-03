@@ -67,7 +67,7 @@ public abstract class SpectranglePlayer extends Observable {
         SpectranglePiece piece = this.game.getBag().takeSpectranglePiece();
         this.spectranglePieces.add(piece);
 
-        Attribute attribute = new Attribute("drawnTile");
+        Attribute attribute = new Attribute("takenPiece");
         attribute.addPlayer(this);
         attribute.addTile(piece);
 
