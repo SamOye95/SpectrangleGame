@@ -34,6 +34,7 @@ public class SpectrangleGame implements Runnable, Observer {
         }
 
         this.players = players;
+        this.init();
 
     }
 

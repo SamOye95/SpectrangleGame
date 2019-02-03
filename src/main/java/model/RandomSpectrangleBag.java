@@ -1,8 +1,6 @@
 package model;
 
 
-import exceptions.EmptyBagException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,32 +15,28 @@ public class RandomSpectrangleBag implements SpectrangleBag {
      * Constructor that creates a random bag
      */
     public RandomSpectrangleBag() {
-        pieces = new ArrayList<SpectranglePiece>();
-        random = new Random();
+        pieces = new ArrayList<>();
+        this.resetBag();
 
     }
 
-    /**
-     * @param spectranglePiece
-     */
-    public void addSpectranglePiece(SpectranglePiece spectranglePiece) {
-
-
-    }
 
     /**
      * @return The piece removed from the bag
-     * @throws EmptyBagException
+     *
      */
 
-
     public SpectranglePiece takeSpectranglePiece() {
+        int piecesLength, index;
+
+        piecesLength = this.pieces.size();
 
         if (pieces.size() == 0) {
             return null;
         }
 
-        return pieces.remove(random.nextInt(getTheNumberOfRemainingPieces()));
+        index = new Random().nextInt(this.pieces.size());
+        return this.pieces.remove(index);
 
 
     }
