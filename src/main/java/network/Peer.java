@@ -39,7 +39,7 @@ public class Peer extends Observable implements Runnable {
 
         try {
             while ((message = this.read()) != null) {
-                this.messenger.forward(this, message);
+                this.messenger.forward(this, message, null);
             }
 
         } catch (IOException e) {

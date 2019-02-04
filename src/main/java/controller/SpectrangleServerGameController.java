@@ -1,13 +1,18 @@
 package controller;
 
 import model.SpectrangleGame;
+import model.SpectranglePieceOrientation;
 import model.SpectranglePlayer;
 import network.Message;
 import network.Messenger;
 import network.Peer;
 import server.ServerDatabase;
+import view.SpectrangleGameView;
 
 public class SpectrangleServerGameController extends SpectrangleController {
+
+
+    private SpectrangleGameView view;
 
     public SpectrangleServerGameController(ServerDatabase database) {
         super(database);
@@ -15,12 +20,12 @@ public class SpectrangleServerGameController extends SpectrangleController {
 
 
     @Override
-    public void forward(Peer peer, Message msg) {
+    public void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation) {
         switch (msg.getCommand().toLowerCase()) {
-            case "placePiece":
-                this.placePiece(peer, msg.getArgs().get(0), msg.getArgs().get(1));
+            case "place_update":
+                this.placePiece(peer, msg.getArgs().get(0), msg.getArgs().get(1), orientation);
                 break;
-            case "switchPiece":
+            case "tiles_update":
                 this.switchPiece(peer, msg.getArgs().get(0));
                 break;
             case "skipMove":
@@ -35,13 +40,13 @@ public class SpectrangleServerGameController extends SpectrangleController {
     }
 
 
-    public void placePiece(Peer peer, String indexStr, String tileStr) {
+    public void placePiece(Peer peer, String indexStr, String tileStr, SpectranglePieceOrientation orientation) {
         Integer index;
 
         try {
             index = Integer.parseInt(indexStr);
         } catch (NumberFormatException e) {
-            peer.write("404 Invalid index. Try again.");
+            peer.write("2 Invalid index. Try again.");
             return;
         }
 
@@ -50,11 +55,11 @@ public class SpectrangleServerGameController extends SpectrangleController {
         int status = player.placeSpectranglePiece(index, tileStr);
 
         switch (status) {
-            case 403:
-                peer.write("403 It's not your turn.");
+            case 3:
+                peer.write("3 It's not your turn.");
                 break;
-            case 404:
-                peer.write("404 You don't have that tile or the index is not valid. Try again.");
+            case 2:
+                peer.write("2 You don't have that tile or the index is not valid. Try again.");
                 break;
             default:
                 Messenger.broadcast(player.getGame().getPlayers(), "placedTile " + player.getPlayerName() + " " + index + " " + tileStr);
@@ -74,11 +79,11 @@ public class SpectrangleServerGameController extends SpectrangleController {
         int status = player.switchPiece(tileStr);
 
         switch (status) {
-            case 403:
-                peer.write("403 It's either not your turn or you can place a tile.");
+            case 3:
+                peer.write("3 It's either not your turn or you cannot place a tile.");
                 break;
-            case 404:
-                peer.write("404 You don't have that tile or it can be played. Try again.");
+            case 2:
+                peer.write("2 You don't have that tile or it cannot be played. Try again.");
                 break;
             default:
                 break;
@@ -92,8 +97,8 @@ public class SpectrangleServerGameController extends SpectrangleController {
         int status = player.skipMove();
 
         switch (status) {
-            case 403:
-                peer.write("403 It's either not your turn or you can place a tile.");
+            case 3:
+                peer.write("3 It's either not your turn or you cannot place a tile.");
                 break;
             default:
                 break;
@@ -106,7 +111,7 @@ public class SpectrangleServerGameController extends SpectrangleController {
         SpectrangleGame game = player.getGame();
 
         if (game == null) {
-            peer.write("403 You're not currently in a game.");
+            peer.write("0 You're not currently in a game.");
         }
 
         player.leaveGame();

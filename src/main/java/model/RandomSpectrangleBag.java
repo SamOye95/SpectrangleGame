@@ -31,7 +31,7 @@ public class RandomSpectrangleBag implements SpectrangleBag {
 
         piecesLength = this.pieces.size();
 
-        if (pieces.size() == 0) {
+        if (piecesLength == 0) {
             return null;
         }
 

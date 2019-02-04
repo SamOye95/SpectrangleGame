@@ -12,8 +12,6 @@ public abstract class SpectranglePlayer extends Observable {
 
     private SpectrangleGame game;
     private List<SpectranglePiece> spectranglePieces;
-    private SpectrangleScoreBoard scoreBoard;
-
     private String playerName;
     private int score;
 
@@ -28,7 +26,6 @@ public abstract class SpectranglePlayer extends Observable {
     public SpectranglePlayer(String playerName) {
         this.playerName = playerName;
         this.spectranglePieces = new ArrayList<SpectranglePiece>();
-        this.scoreBoard = new SpectrangleScoreBoard();
         this.score = 0;
     }
 
@@ -36,7 +33,6 @@ public abstract class SpectranglePlayer extends Observable {
         this.playerName = playerName;
         this.score = 0;
         this.peer = peer;
-        this.scoreBoard = new SpectrangleScoreBoard();
         this.spectranglePieces = new ArrayList<SpectranglePiece>();
 
 
@@ -238,14 +234,6 @@ public abstract class SpectranglePlayer extends Observable {
 
     public void setPeer(Peer peer) {
         this.peer = peer;
-    }
-
-    public SpectrangleScoreBoard getScoreBoard() {
-        return scoreBoard;
-    }
-
-    public void setScoreBoard(SpectrangleScoreBoard scoreBoard) {
-        this.scoreBoard = scoreBoard;
     }
 
     public List<SpectranglePiece> getSpectranglePieces() {

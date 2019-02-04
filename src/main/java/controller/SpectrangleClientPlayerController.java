@@ -2,6 +2,7 @@ package controller;
 
 import client.ClientDatabase;
 import model.SpectrangleHumanPlayer;
+import model.SpectranglePieceOrientation;
 import model.SpectranglePlayer;
 import network.Database;
 import network.Message;
@@ -18,9 +19,9 @@ public class SpectrangleClientPlayerController extends SpectrangleController {
 
 
     @Override
-    public void forward(Peer peer, Message msg) {
+    public void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation) {
         switch (msg.getCommand().toLowerCase()) {
-            case "features":
+            case "client_features":
                 this.features(msg.getArgs());
                 break;
             case "playerName":
@@ -39,7 +40,7 @@ public class SpectrangleClientPlayerController extends SpectrangleController {
 
     public void features(List<String> args) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        database.getPeer().write("features");
+        database.getPeer().write("client_features");
     }
 
     public void playerName(String playerName) {

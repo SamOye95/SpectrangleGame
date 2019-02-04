@@ -42,8 +42,19 @@ public class Server implements Observer {
             Server server;
             Peer peer;
 
+            Integer port;
             try {
-                server = new Server(8081);
+                port = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid port. Terminating!");
+                return;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Port missing!");
+                return;
+            }
+
+            try {
+                server = new Server(port);
             } catch (IOException e) {
                 System.out.println("Unable to start the server. Terminating!");
                 return;

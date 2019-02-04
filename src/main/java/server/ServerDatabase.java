@@ -56,10 +56,6 @@ public class ServerDatabase implements Database {
         this.users.put(peer, player);
     }
 
-    public synchronized void removeUser(Peer peer) {
-        this.users.remove(peer);
-    }
-
     public synchronized List<SpectranglePlayer> getIdlePlayers() {
         List<SpectranglePlayer> idlePlayers = new ArrayList<SpectranglePlayer>();
 
@@ -76,17 +72,10 @@ public class ServerDatabase implements Database {
         return peers;
     }
 
-    public synchronized void setPeers(List<Peer> peers) {
-        this.peers = peers;
-    }
-
     public List<SpectranglePlayer> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<SpectranglePlayer> players) {
-        this.players = players;
-    }
 }
 
 

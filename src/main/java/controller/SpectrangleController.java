@@ -1,5 +1,6 @@
 package controller;
 
+import model.SpectranglePieceOrientation;
 import network.Database;
 import network.Message;
 import network.Peer;
@@ -17,7 +18,8 @@ public abstract class SpectrangleController {
     }
 
 
-    public abstract void forward(Peer peer, Message msg);
+    public abstract void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation);
+
 
 
     public boolean hasMethod(String method) {

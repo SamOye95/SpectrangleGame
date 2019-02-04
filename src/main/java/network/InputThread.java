@@ -24,7 +24,7 @@ public class InputThread implements Runnable {
         while (this.running) {
             System.out.print("> ");
             input = scanner.nextLine();
-            this.messenger.forward(null, input);
+            this.messenger.forward(null, input, null);
 
             if (input != null) {
                 this.peer.write(input);

@@ -1,6 +1,8 @@
 package model;
 
 
+import exceptions.PeerNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,9 +12,9 @@ public class SpectrangleLobby {
     private SpectranglePlayer host;
     private SpectrangleGame game;
 
-    public SpectrangleLobby(SpectranglePlayer player) {
+    public SpectrangleLobby(SpectranglePlayer player) throws PeerNotFoundException {
         if (player == null) {
-            //Throw an exception
+            throw new PeerNotFoundException("Player Not Found");
         }
 
         this.players = new ArrayList<SpectranglePlayer>();
@@ -20,11 +22,10 @@ public class SpectrangleLobby {
         this.addPlayer(player);
     }
 
-    public SpectrangleGame startGame() {
+    public SpectrangleGame startGame() throws PeerNotFoundException {
 
         if (this.players.size() < 2) {
-            //Throw an exception
-
+            throw new PeerNotFoundException("Not enough players to start game");
         }
         return game;
     }

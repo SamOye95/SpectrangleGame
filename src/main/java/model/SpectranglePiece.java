@@ -31,9 +31,12 @@ public class SpectranglePiece {
         this.init();
     }
 
-    public static void take(List<SpectranglePiece> tiles) {
+    /**
+
+     */
+    public static void take(List<SpectranglePiece> pieces) {
         for (int i = 0; i < 6; i++) {
-            for (SpectranglePiece tile : tiles) {
+            for (SpectranglePiece tile : pieces) {
                 System.out.print(tile.drawingPiece.get(i));
             }
             System.out.print("\n");

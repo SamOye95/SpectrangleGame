@@ -1,6 +1,7 @@
 package network;
 
 import controller.SpectrangleController;
+import model.SpectranglePieceOrientation;
 import model.SpectranglePlayer;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ public class Messenger {
         this.errorCodes.add(4);// unknown command
         this.errorCodes.add(5);// invalid command
         this.errorCodes.add(6);// invalid parameter
-
     }
 
     public static void broadcast(List<SpectranglePlayer> players, String msg) {
@@ -31,7 +31,7 @@ public class Messenger {
         }
     }
 
-    public void forward(Peer peer, String message) {
+    public void forward(Peer peer, String message, SpectranglePieceOrientation orientation) {
         Message msg = new Message(message);
 
         if (msg.getErrorCode() != null) {
@@ -41,7 +41,7 @@ public class Messenger {
 
         for (SpectrangleController controller : this.controllers) {
             if (controller.hasMethod(msg.getCommand())) {
-                controller.forward(peer, msg);
+                controller.forward(peer, msg, null);
             }
         }
     }

@@ -1,5 +1,6 @@
 package controller;
 
+import model.SpectranglePieceOrientation;
 import model.SpectranglePlayer;
 import network.Message;
 import network.Peer;
@@ -16,12 +17,12 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
 
 
     @Override
-    public void forward(Peer peer, Message msg) {
+    public void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation) {
         switch (msg.getCommand().toLowerCase()) {
             case "playerName":
-                this.nickname(peer, msg.getStringArgs());
+                this.playerName(peer, msg.getStringArgs());
                 break;
-            case "features":
+            case "client_features":
                 this.features(peer, msg.getArgs());
                 break;
             default:
@@ -30,7 +31,7 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
     }
 
 
-    public void nickname(Peer peer, String nickname) {
+    public void playerName(Peer peer, String playerName) {
         SpectranglePlayer player = ((ServerDatabase) this.getDatabase()).getPlayer(peer);
         ServerDatabase database = (ServerDatabase) this.getDatabase();
 
@@ -39,18 +40,18 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
         }
 
         if (player.getGame() != null) {
-            peer.write("403 You're not allowed to change your playerName during the game.");
+            peer.write("1 You're not allowed to change your playerName during the game.");
             return;
         }
 
         for (SpectranglePlayer p : database.getPlayers()) {
-            if (nickname.equals(p.getPlayerName())) {
-                peer.write("403 That playerName has already been chosen. Pick another one");
+            if (playerName.equals(p.getPlayerName())) {
+                peer.write("1 That playerName has already been chosen. Pick another one");
                 return;
             }
         }
 
-        player.setPlayerName(nickname);
+        player.setPlayerName(playerName);
         peer.write("200 " + "Waiting for more players...");
     }
 

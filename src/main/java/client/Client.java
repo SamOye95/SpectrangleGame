@@ -42,6 +42,21 @@ public class Client {
 
 
     public static void main(String args[]) throws InterruptedException {
+
+
+        String ip_addr;
+        Integer port;
+
+        try {
+            ip_addr = args[0];
+            port = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid port. Terminating!");
+            return;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Argument missing. Terminating!");
+            return;
+        }
         try {
             Client client = new Client("localhost", 8081);
             client.database.getInputThread().begin();
