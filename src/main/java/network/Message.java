@@ -12,7 +12,7 @@ public class Message {
 
 
     public Message(String msg) {
-        this.args = new ArrayList<String>(Arrays.asList(msg.split(" ")));
+        this.args = new ArrayList<>(Arrays.asList(msg.split(" ")));
         this.command = args.remove(0);
 
         try {
@@ -26,11 +26,9 @@ public class Message {
         return String.join(" ", this.args);
     }
 
-
     public String getCommand() {
         return command;
     }
-
     public void setCommand(String command) {
         this.command = command;
     }
@@ -38,7 +36,6 @@ public class Message {
     public List<String> getArgs() {
         return args;
     }
-
     public void setArgs(List<String> args) {
         this.args = args;
     }
@@ -46,9 +43,9 @@ public class Message {
     public Integer getErrorCode() {
         return errorCode;
     }
-
     public void setErrorCode(Integer errorCode) {
         this.errorCode = errorCode;
     }
+
 
 }

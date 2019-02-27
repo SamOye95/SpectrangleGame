@@ -1,8 +1,8 @@
 package client;
 
-import controller.SpectrangleClientGameController;
-import controller.SpectrangleClientPlayerController;
-import controller.SpectrangleController;
+import controller.ClientGameController;
+import controller.ClientPlayerController;
+import controller.Controller;
 import network.InputThread;
 import network.Messenger;
 import network.Peer;
@@ -22,16 +22,20 @@ public class Client {
     private ClientDatabase database;
     private Messenger messenger;
 
-
+    /*
+     * @param host
+     * @param port
+     * @throws IOException
+     */
     public Client(String host, Integer port) throws IOException {
         this.host = host;
         this.port = port;
         this.database = new ClientDatabase();
 
         //Controller list
-        List<SpectrangleController> controllers = new ArrayList<SpectrangleController>();
-        controllers.add(new SpectrangleClientPlayerController(this.database));
-        controllers.add(new SpectrangleClientGameController(this.database));
+        List<Controller> controllers = new ArrayList<Controller>();
+        controllers.add(new ClientPlayerController(this.database));
+        controllers.add(new ClientGameController(this.database));
 
 
         this.messenger = new Messenger(controllers);
@@ -40,16 +44,19 @@ public class Client {
         this.database.setInputThread(new InputThread(this.database.getPeer(), this.messenger));
     }
 
-
-    public static void main(String args[]) throws InterruptedException {
+    /*
+     * Main function to create a client to connect to the server.
+     * @param args IP address and port number
+     */
+    public static void main(String args[]) {
 
 
         String ip_addr;
-        Integer port;
+        int port;
 
         try {
-            ip_addr = args[0];
-            port = Integer.parseInt(args[1]);
+            ip_addr = "localhost";
+            port = 8082;
         } catch (NumberFormatException e) {
             System.out.println("Invalid port. Terminating!");
             return;
@@ -58,7 +65,7 @@ public class Client {
             return;
         }
         try {
-            Client client = new Client("localhost", 8081);
+            Client client = new Client(ip_addr, port);
             client.database.getInputThread().begin();
 
         } catch (UnknownHostException e) {

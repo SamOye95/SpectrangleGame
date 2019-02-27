@@ -16,7 +16,7 @@ public class InputThread implements Runnable {
         this.messenger = messenger;
     }
 
-
+    @Override
     public void run() {
         String input;
         Scanner scanner = new Scanner(System.in);
@@ -24,7 +24,7 @@ public class InputThread implements Runnable {
         while (this.running) {
             System.out.print("> ");
             input = scanner.nextLine();
-            this.messenger.forward(null, input, null);
+            this.messenger.forward(null, input);
 
             if (input != null) {
                 this.peer.write(input);

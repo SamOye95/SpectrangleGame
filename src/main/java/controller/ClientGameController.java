@@ -2,7 +2,11 @@ package controller;
 
 
 import client.ClientDatabase;
-import model.*;
+import exceptions.NotEnoughPlayersException;
+import model.Game;
+import model.HumanPlayer;
+import model.Player;
+import model.Tile;
 import network.Message;
 import network.Peer;
 import view.SpectrangleGameView;
@@ -10,52 +14,69 @@ import view.SpectrangleGameView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpectrangleClientGameController extends SpectrangleController {
+public class ClientGameController extends Controller {
 
 
     private SpectrangleGameView view;
 
 
-    public SpectrangleClientGameController(ClientDatabase database) {
+    public ClientGameController(ClientDatabase database) {
         super(database);
         this.view = new SpectrangleGameView();
     }
 
-
+    /*
+     * This method forwards the first word of the message, and identifies the command based on that
+     * word. It then calls the correct function for that command
+     * If the command cannot be forwarded, either by this function or one of the other functions,
+     * then a message will be sent to the client stating that it sent an invalid command.
+     *
+     * @param peer
+     * @param msg
+     */
     @Override
-    public void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation) {
-        switch (msg.getCommand().toLowerCase()) {
-            case "start":
-                if (msg.getArgs().size() < SpectrangleGame.minPlayers) return;
+    public void forward(Peer peer, Message msg) {
+        switch (msg.getCommand()) {
+            case "start": // start <nn1> <nn2> [nn3] [nn4]
+                if (msg.getArgs().size() < Game.minPlayers) {
+                    return;
+                }
                 this.start(msg.getArgs());
                 break;
-            case "play":
-                if (msg.getArgs().size() < SpectrangleGame.minPlayers) return;
-                this.play(msg.getArgs().size(), msg.getArgs());
-                break;
-            case "takenPiece":
-                if (msg.getArgs().size() < 2) return;
+            case "takenPiece": // drawnTile <player> <tile>
+                if (msg.getArgs().size() < 2) {
+                    return;
+                }
                 this.takenPiece(msg.getArgs().get(0), msg.getArgs().get(1));
                 break;
-            case "placedTile":
-                if (msg.getArgs().size() < 3) return;
+            case "placedTile": // placedTile <index> <tile>
+                if (msg.getArgs().size() < 3) {
+                    return;
+                }
                 this.placedTile(msg.getArgs().get(0), msg.getArgs().get(1), msg.getArgs().get(2));
                 break;
-            case "switchedTile":
-                if (msg.getArgs().size() < 3) return;
+            case "switchedTile": // switchedTile <index> <oldTile> <newTile>
+                if (msg.getArgs().size() < 3) {
+                    return;
+                }
                 this.switchedTile(msg.getArgs().get(0), msg.getArgs().get(1), msg.getArgs().get(2));
                 break;
-            case "skippedMove":
-                if (msg.getArgs().size() < 1) return;
+            case "skippedMove": // skippedMove <player>
+                if (msg.getArgs().size() < 1) {
+                    return;
+                }
                 this.skippedMove(msg.getArgs().get(0));
                 break;
-            case "yourturn":
-                this.requestMove(msg.getArgs().get(0));
+            case "requestMove":
+                this.requestMove();
                 break;
             case "rotate":
+                if (msg.getArgs().size() < 1) {
+                    return;
+                }
                 this.rotate(msg.getArgs().get(0));
                 break;
-            case "players":
+            case "players": //players <nn1> [nn2] [nn3] [nn4]
                 this.players(msg.getArgs());
                 break;
             case "end":
@@ -72,53 +93,44 @@ public class SpectrangleClientGameController extends SpectrangleController {
         System.out.print("> ");
     }
 
-    public void play(int amount, List<String> args) {
-        ClientDatabase database = (ClientDatabase) this.getDatabase();
-
-        List<SpectranglePlayer> players = new ArrayList<SpectranglePlayer>();
-        amount = players.size();
-
-        for (String playerName : args) {
-            if (playerName.equals(database.getPlayer().getPlayerName())) {
-                players.add(database.getPlayer());
-            } else {
-                players.add(new SpectrangleHumanPlayer(playerName));
-            }
-        }
-
-        SpectrangleGame game = new SpectrangleGame(players, null);
-        database.setGame(game);
-        this.view.setGame(game);
-        this.view.take(true);
-    }
-
     public void start(List<String> args) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
 
-        List<SpectranglePlayer> players = new ArrayList<SpectranglePlayer>();
+        List<Player> players = new ArrayList<Player>();
 
 
         for (String playerName : args) {
-            if (playerName.equals(database.getPlayer().getPlayerName())) {
+            if (playerName.equalsIgnoreCase(database.getPlayer().getPlayerName())) {
                 players.add(database.getPlayer());
             } else {
-                players.add(new SpectrangleHumanPlayer(playerName));
+                players.add(new HumanPlayer(playerName));
             }
         }
 
-        SpectrangleGame game = new SpectrangleGame(players, null);
+        Game game = null;
+        try {
+            game = new Game(players, null);
+        } catch (NotEnoughPlayersException e) {
+            e.printStackTrace();
+            return;
+        }
         database.setGame(game);
         this.view.setGame(game);
         this.view.take(true);
     }
 
+    /*
+     *
+     * @param playerName
+     * @param pieceString
+     */
     public void takenPiece(String playerName, String pieceString) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        List<SpectranglePlayer> players = database.getGame().getPlayers();
+        List<Player> players = database.getGame().getPlayers();
 
-        for (SpectranglePlayer player : players) {
-            if (playerName.equals(player.getPlayerName())) {
-                player.takeSpectralPiece(pieceString);
+        for (Player player : players) {
+            if (playerName.equalsIgnoreCase(player.getPlayerName())) {
+                player.takeTile(pieceString);
             }
         }
 
@@ -127,12 +139,12 @@ public class SpectrangleClientGameController extends SpectrangleController {
 
     public void placedTile(String playerName, String indexStr, String tileStr) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        SpectrangleGame game = database.getGame();
-        SpectranglePlayer player = null;
+        Game game = database.getGame();
+        Player player = null;
         Integer index;
 
-        for (SpectranglePlayer p : game.getPlayers()) {
-            if (playerName.equals(p.getPlayerName())) {
+        for (Player p : game.getPlayers()) {
+            if (playerName.equalsIgnoreCase(p.getPlayerName())) {
                 player = p;
                 break;
             }
@@ -148,18 +160,18 @@ public class SpectrangleClientGameController extends SpectrangleController {
             return;
         }
 
-        player.placeSpectranglePiece(index, tileStr);
+        player.placeTile(index, tileStr);
 
         this.view.take(true);
     }
 
     public void switchedTile(String playerName, String oldTileStr, String newTileStr) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        SpectrangleGame game = database.getGame();
-        SpectranglePlayer player = null;
+        Game game = database.getGame();
+        Player player = null;
 
-        for (SpectranglePlayer p : game.getPlayers()) {
-            if (playerName.equals(p.getPlayerName())) {
+        for (Player p : game.getPlayers()) {
+            if (playerName.equalsIgnoreCase(p.getPlayerName())) {
                 player = p;
                 break;
             }
@@ -173,17 +185,17 @@ public class SpectrangleClientGameController extends SpectrangleController {
         this.view.take(true);
     }
 
-    public void requestMove(String playName) {
-        this.serverMessage(playName + "It's your turn. Enter move.");
+    public void requestMove() {
+        this.serverMessage("It's your turn. Enter move.");
     }
 
     public void skippedMove(String playerName) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        SpectrangleGame game = database.getGame();
-        SpectranglePlayer player = null;
+        Game game = database.getGame();
+        Player player = null;
 
-        for (SpectranglePlayer p : game.getPlayers()) {
-            if (playerName.equals(p.getPlayerName())) {
+        for (Player p : game.getPlayers()) {
+            if (playerName.equalsIgnoreCase(p.getPlayerName())) {
                 player = p;
                 break;
             }
@@ -203,9 +215,9 @@ public class SpectrangleClientGameController extends SpectrangleController {
 
     public void players(List<String> args) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        SpectrangleGame game = database.getGame();
+        Game game = database.getGame();
 
-        for (SpectranglePlayer player : game.getPlayers()) {
+        for (Player player : game.getPlayers()) {
             if (!args.contains(player.getPlayerName())) {
                 player.leaveGame();
             }
@@ -214,10 +226,9 @@ public class SpectrangleClientGameController extends SpectrangleController {
 
     public void rotate(String tileStr) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        SpectrangleGame game = database.getGame();
-        SpectranglePlayer player = database.getPlayer();
+        Player player = database.getPlayer();
 
-        for (SpectranglePiece spectranglePiece : player.getSpectranglePieces()) {
+        for (Tile spectranglePiece : player.getTiles()) {
             if (spectranglePiece.isSamePiece(tileStr)) {
                 spectranglePiece.rotate();
             }

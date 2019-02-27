@@ -3,26 +3,28 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpectranglePiece {
+/*
+ * This class implements the tile of the Spectrangle game.
+ */
+public class Tile {
 
 
     public List<String> drawingPiece;
 
-    private SpectranglePieceColor colorVertical, colorLeft, colorRight;
-    private SpectranglePieceOrientation orientation;
+    private char colorVertical, colorLeft, colorRight;
+    private TileOrientation orientation;
     private Integer points;
 
 
-    /**
-     * Constructs the spectrangle piece
-     *
+    /*
+     *This constructor creates an instance of a tile by the colors and score given.     *
      * @param orientation
-     * @param colorLeft
-     * @param colorRight
-     * @param colorVertical
-     * @param points
+     * @param colorLeft the color in the left position
+     * @param colorRight the color in the right position
+     * @param colorVertical the color in the vertical position
+     * @param points the score of the tile
      */
-    public SpectranglePiece(SpectranglePieceOrientation orientation, SpectranglePieceColor colorLeft, SpectranglePieceColor colorRight, SpectranglePieceColor colorVertical, int points) {
+    public Tile(TileOrientation orientation, char colorLeft, char colorRight, char colorVertical, int points) {
         this.orientation = orientation;
         this.colorLeft = colorLeft;
         this.colorRight = colorRight;
@@ -31,31 +33,31 @@ public class SpectranglePiece {
         this.init();
     }
 
-    /**
+    /*
 
      */
-    public static void take(List<SpectranglePiece> pieces) {
+    public static void take(List<Tile> pieces) {
         for (int i = 0; i < 6; i++) {
-            for (SpectranglePiece tile : pieces) {
+            for (Tile tile : pieces) {
                 System.out.print(tile.drawingPiece.get(i));
             }
             System.out.print("\n");
         }
     }
 
-    /**
+    /*
      * This method rotates the piece
      */
     public void rotate() {
-        SpectranglePieceColor aux_left = this.colorLeft, aux_right = this.colorRight, aux_vertical = this.colorVertical;
+        char aux_left = this.colorLeft, aux_right = this.colorRight, aux_vertical = this.colorVertical;
 
-        if (this.orientation.equals(SpectranglePieceOrientation.UP)) {
-            this.orientation = SpectranglePieceOrientation.DOWN;
+        if (this.orientation.equals(TileOrientation.UP)) {
+            this.orientation = TileOrientation.DOWN;
             this.colorLeft = aux_vertical;
             this.colorRight = aux_right;
             this.colorVertical = aux_left;
         } else {
-            this.orientation = SpectranglePieceOrientation.UP;
+            this.orientation = TileOrientation.UP;
             this.colorLeft = aux_left;
             this.colorRight = aux_vertical;
             this.colorVertical = aux_right;
@@ -66,7 +68,7 @@ public class SpectranglePiece {
 
     @Override
     public String toString() {
-        if (this.orientation.equals(SpectranglePieceOrientation.UP)) {
+        if (this.orientation.equals(TileOrientation.UP)) {
             return String.valueOf(this.colorRight) + String.valueOf(this.colorVertical) + String.valueOf(this.colorLeft) + this.points.toString();
         } else {
             return String.valueOf(this.colorVertical) + String.valueOf(this.colorRight) + String.valueOf(this.colorLeft) + this.points.toString();
@@ -78,7 +80,7 @@ public class SpectranglePiece {
 
         for (int i = 0; i < 6; i++) {
             this.rotate();
-            if (this.toString().equals(pieceString)) {
+            if (this.toString().equalsIgnoreCase(pieceString)) {
                 samePiece = true;
             }
         }
@@ -87,13 +89,13 @@ public class SpectranglePiece {
     }
 
     private void init() {
-        this.drawingPiece = new ArrayList<String>();
+        this.drawingPiece = new ArrayList<>();
         this.updatesPiece();
     }
 
     private void updatesPiece() {
-        this.drawingPiece = new ArrayList<String>();
-        if (this.orientation.equals(SpectranglePieceOrientation.UP)) {
+        this.drawingPiece = new ArrayList<>();
+        if (this.orientation.equals(TileOrientation.UP)) {
             this.drawingPiece.add("     ^      ");
             this.drawingPiece.add("    / \\     ");
             this.drawingPiece.add("   /   \\    ");
@@ -110,14 +112,14 @@ public class SpectranglePiece {
         }
     }
 
-    /**
+    /*
      * This method inverts the orientation of the piece
      */
     public void invertPiece() {
         String aux = this.toString();
         for (int i = 0; i < 6; i++) {
             this.rotate();
-            if (this.toString().equals(aux)) {
+            if (this.toString().equalsIgnoreCase(aux)) {
                 return;
             }
         }
@@ -132,36 +134,36 @@ public class SpectranglePiece {
         this.points = points;
     }
 
-    public SpectranglePieceColor getColorVertical() {
+    /*
+     * This method gives the color in the vertical field.
+     *
+     * @return the color in the vertical color field
+     */
+    public char getColorVertical() {
         return colorVertical;
     }
 
-    public void setColorVertical(SpectranglePieceColor colorVertical) {
-        this.colorVertical = colorVertical;
-    }
-
-    public SpectranglePieceColor getColorLeft() {
+    /*
+     * This method gives the color in the left field.
+     *
+     * @return the color in the left color field
+     */
+    public char getColorLeft() {
         return colorLeft;
     }
 
-    public void setColorLeft(SpectranglePieceColor colorLeft) {
-        this.colorLeft = colorLeft;
-    }
-
-    public SpectranglePieceColor getColorRight() {
+    /*
+     * This method gives the color in the right field.
+     *
+     * @return the color in the right color field
+     */
+    public char getColorRight() {
         return colorRight;
     }
 
-    public void setColorRight(SpectranglePieceColor colorRight) {
-        this.colorRight = colorRight;
-    }
 
-    public SpectranglePieceOrientation getSpectranglePieceOrientation() {
+    public TileOrientation getTileOrientation() {
         return orientation;
-    }
-
-    public void setSpectranglePieceOrientation(SpectranglePieceOrientation orientation) {
-        this.orientation = orientation;
     }
 
 

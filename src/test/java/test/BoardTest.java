@@ -1,16 +1,19 @@
 package test;
 
-import model.*;
+import model.Board;
+import model.BoardSpace;
+import model.Tile;
+import model.TileOrientation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
-public class SpectrangleBoardTest {
+public class BoardTest {
     @Test
     public void testCoordToIndex() {
-        SpectrangleBoard board = new SpectrangleBoard();
+        Board board = new Board();
         assertEquals(board.mapsCoordinatesToIndex(0, 0), 0);
         assertEquals(board.mapsCoordinatesToIndex(1, -1), 1);
         assertEquals(board.mapsCoordinatesToIndex(5, -4), 26);
@@ -21,7 +24,7 @@ public class SpectrangleBoardTest {
 
     @Test
     public void testIndexToCoord() {
-        SpectrangleBoard board = new SpectrangleBoard();
+        Board board = new Board();
         assertEquals(board.columnOfIndex(0), 0);
         assertEquals(board.rowOfIndex(0), 0);
 
@@ -44,9 +47,9 @@ public class SpectrangleBoardTest {
 
     @Test
     public void testEmptySpaces() {
-        SpectrangleBoard board = new SpectrangleBoard();
+        Board board = new Board();
         boolean ok = true;
-        for (SpectrangleBoardSpace s : board.getBoardSpaces())
+        for (BoardSpace s : board.getBoardSpaces())
             if (s.getSpectranglePiece() != null)
                 ok = false;
         assertTrue(ok);
@@ -54,20 +57,20 @@ public class SpectrangleBoardTest {
 
     @Test
     public void testSpaceOfCoord() {
-        SpectrangleBoard
-                board = new SpectrangleBoard();
+        Board
+                board = new Board();
 
-        assertTrue(board.getBoardSpaces().get(0).equals(board.getSpectrangleBoardSpaceOfCoord(0, 0)));
-        assertTrue(board.getBoardSpaces().get(1).equals(board.getSpectrangleBoardSpaceOfCoord(1, -1)));
-        assertTrue(board.getBoardSpaces().get(26).equals(board.getSpectrangleBoardSpaceOfCoord(5, -4)));
-        assertTrue(board.getBoardSpaces().get(31).equals(board.getSpectrangleBoardSpaceOfCoord(5, 1)));
+        assertTrue(board.getBoardSpaces().get(0).equals(board.getBoardSpaceOfCoord(0, 0)));
+        assertTrue(board.getBoardSpaces().get(1).equals(board.getBoardSpaceOfCoord(1, -1)));
+        assertTrue(board.getBoardSpaces().get(26).equals(board.getBoardSpaceOfCoord(5, -4)));
+        assertTrue(board.getBoardSpaces().get(31).equals(board.getBoardSpaceOfCoord(5, 1)));
 
 
     }
 
     @Test
     public void testNeighbours() {
-        SpectrangleBoard board = new SpectrangleBoard();
+        Board board = new Board();
         assertTrue(board.getBoardSpaces().get(12).getLeft().equals(board.getBoardSpaces().get(11)));
         assertTrue(board.getBoardSpaces().get(23).getLeft().equals(board.getBoardSpaces().get(22)));
         assertTrue(board.getBoardSpaces().get(34).getLeft().equals(board.getBoardSpaces().get(33)));
@@ -85,32 +88,32 @@ public class SpectrangleBoardTest {
 
     @Test
     public void testPlacePiece() {
-        SpectrangleBoard board = new SpectrangleBoard();
-        SpectranglePiece piece = new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.R, SpectranglePieceColor.R, SpectranglePieceColor.R, 6);
+        Board board = new Board();
+        Tile piece = new Tile(TileOrientation.UP, 'R', 'R', 'R', 6);
 
 
-        board.placeSpectranglePiece(piece, 0);
-        assertTrue(board.getSpectrangleBoardSpaceOfCoord(0, 0).getSpectranglePiece().equals(piece));
+        board.placeTile(piece, 0);
+        assertTrue(board.getBoardSpaceOfCoord(0, 0).getSpectranglePiece().equals(piece));
 
 
-        assertEquals(board.placeSpectranglePiece(piece, 50), -1);
+        assertEquals(board.placeTile(piece, 50), -1);
     }
 
 
     @Test
     public void testCanBePlaced() {
-        SpectrangleBoard board = new SpectrangleBoard();
-        SpectranglePiece piece = new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.R, SpectranglePieceColor.R, SpectranglePieceColor.R, 6);
+        Board board = new Board();
+        Tile piece = new Tile(TileOrientation.UP, 'R', 'R', 'R', 6);
 
-        board.placeSpectranglePiece(piece, 2);
-        board.placeSpectranglePiece(piece, 1);
-        board.placeSpectranglePiece(piece, 5);
-        board.placeSpectranglePiece(piece, 6);
-        board.placeSpectranglePiece(piece, 7);
+        board.placeTile(piece, 2);
+        board.placeTile(piece, 1);
+        board.placeTile(piece, 5);
+        board.placeTile(piece, 6);
+        board.placeTile(piece, 7);
 
-        SpectranglePiece tile5 = new SpectranglePiece(SpectranglePieceOrientation.UP, SpectranglePieceColor.G, SpectranglePieceColor.G, SpectranglePieceColor.G, 6);
-        board.placeSpectranglePiece(tile5, 3);
-        assertEquals(board.canBePlaced(board.getSpectrangleBoardSpaceOfCoord(1, 1), tile5), 0);
+        Tile tile5 = new Tile(TileOrientation.UP, 'G', 'G', 'G', 6);
+        board.placeTile(tile5, 3);
+        assertEquals(board.canBePlaced(board.getBoardSpaceOfCoord(1, 1), tile5), 0);
 
 
     }

@@ -1,30 +1,29 @@
 package controller;
 
 import client.ClientDatabase;
-import model.SpectrangleHumanPlayer;
-import model.SpectranglePieceOrientation;
-import model.SpectranglePlayer;
+import model.HumanPlayer;
+import model.Player;
 import network.Database;
 import network.Message;
 import network.Peer;
 
 import java.util.List;
 
-public class SpectrangleClientPlayerController extends SpectrangleController {
+public class ClientPlayerController extends Controller {
 
 
-    public SpectrangleClientPlayerController(Database database) {
+    public ClientPlayerController(Database database) {
         super(database);
     }
 
 
     @Override
-    public void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation) {
-        switch (msg.getCommand().toLowerCase()) {
-            case "client_features":
+    public void forward(Peer peer, Message msg) {
+        switch (msg.getCommand()) {
+            case "features": // features [feature 1] [feature2] [...]
                 this.features(msg.getArgs());
                 break;
-            case "playerName":
+            case "playerName": //playerName <playerName>
                 this.playerName(msg.getArgs().get(0));
                 break;
             default:
@@ -40,17 +39,17 @@ public class SpectrangleClientPlayerController extends SpectrangleController {
 
     public void features(List<String> args) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        database.getPeer().write("client_features");
+        database.getPeer().write("features");
     }
 
     public void playerName(String playerName) {
         ClientDatabase database = (ClientDatabase) this.getDatabase();
-        SpectranglePlayer player = database.getPlayer();
+        Player player = database.getPlayer();
 
         if (player != null) {
             player.setPlayerName(playerName);
         } else {
-            player = new SpectrangleHumanPlayer(playerName);
+            player = new HumanPlayer(playerName);
             database.setPlayer(player);
         }
     }

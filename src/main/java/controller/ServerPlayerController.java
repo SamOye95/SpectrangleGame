@@ -1,28 +1,30 @@
 package controller;
 
-import model.SpectranglePieceOrientation;
-import model.SpectranglePlayer;
+import model.Player;
 import network.Message;
 import network.Peer;
 import server.ServerDatabase;
 
 import java.util.List;
 
-public class SpectrangleServerPlayerController extends SpectrangleController {
+public class ServerPlayerController extends Controller {
 
 
-    public SpectrangleServerPlayerController(ServerDatabase database) {
+    public ServerPlayerController(ServerDatabase database) {
         super(database);
     }
 
 
     @Override
-    public void forward(Peer peer, Message msg, SpectranglePieceOrientation orientation) {
-        switch (msg.getCommand().toLowerCase()) {
+    public void forward(Peer peer, Message msg) {
+        switch (msg.getCommand()) {
             case "playerName":
+                if (msg.getArgs().size() < 1) {
+                    return;
+                }
                 this.playerName(peer, msg.getStringArgs());
                 break;
-            case "client_features":
+            case "features":
                 this.features(peer, msg.getArgs());
                 break;
             default:
@@ -32,7 +34,7 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
 
 
     public void playerName(Peer peer, String playerName) {
-        SpectranglePlayer player = ((ServerDatabase) this.getDatabase()).getPlayer(peer);
+        Player player = ((ServerDatabase) this.getDatabase()).getPlayer(peer);
         ServerDatabase database = (ServerDatabase) this.getDatabase();
 
         if (player == null) {
@@ -40,13 +42,13 @@ public class SpectrangleServerPlayerController extends SpectrangleController {
         }
 
         if (player.getGame() != null) {
-            peer.write("1 You're not allowed to change your playerName during the game.");
+            peer.write("403 You're not allowed to change your nickname during the game.");
             return;
         }
 
-        for (SpectranglePlayer p : database.getPlayers()) {
-            if (playerName.equals(p.getPlayerName())) {
-                peer.write("1 That playerName has already been chosen. Pick another one");
+        for (Player p : database.getPlayers()) {
+            if (playerName.equalsIgnoreCase(p.getPlayerName())) {
+                peer.write("403 That nickname has already been chosen. Pick another one");
                 return;
             }
         }

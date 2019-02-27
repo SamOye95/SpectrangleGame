@@ -1,7 +1,8 @@
 package server;
 
-import model.SpectrangleGame;
-import model.SpectranglePlayer;
+import exceptions.NotEnoughPlayersException;
+import model.Game;
+import model.Player;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class ServerManager implements Runnable {
         this.database = database;
     }
 
-
+    @Override
     public void run() {
         while (true) {
 
@@ -28,11 +29,17 @@ public class ServerManager implements Runnable {
 
 
     private void createGames() {
-        List<SpectranglePlayer> players = this.database.getIdlePlayers();
+        List<Player> players = this.database.getIdlePlayers();
 
-        if (players.size() >= SpectrangleGame.minPlayers) {
-            SpectranglePlayer host = players.get(0);
-            SpectrangleGame game = new SpectrangleGame(players, host);
+        if (players.size() >= Game.minPlayers) {
+            Player host = players.get(0);
+            Game game = null;
+            try {
+                game = new Game(players, host);
+            } catch (NotEnoughPlayersException e) {
+                e.printStackTrace();
+                return;
+            }
 
             game.start();
             this.database.insertGame(game);

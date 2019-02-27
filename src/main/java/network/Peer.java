@@ -14,7 +14,7 @@ public class Peer extends Observable implements Runnable {
     private BufferedReader reader;
     private PrintWriter writer;
 
-    /**
+    /*
      * @param socket
      * @param messenger
      * @param setup
@@ -33,13 +33,13 @@ public class Peer extends Observable implements Runnable {
         this.thread.start();
     }
 
-
+    @Override
     public void run() {
         String message;
 
         try {
             while ((message = this.read()) != null) {
-                this.messenger.forward(this, message, null);
+                this.messenger.forward(this, message);
             }
 
         } catch (IOException e) {

@@ -2,13 +2,13 @@ package model;
 
 import network.Peer;
 
-public class SpectrangleHumanPlayer extends SpectranglePlayer {
+public class HumanPlayer extends Player {
 
-    public SpectrangleHumanPlayer(String playerName, Peer peer) {
+    public HumanPlayer(String playerName, Peer peer) {
         super(playerName, peer);
     }
 
-    public SpectrangleHumanPlayer(String playername) {
+    public HumanPlayer(String playername) {
         super(playername);
     }
 

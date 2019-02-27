@@ -1,30 +1,30 @@
 package network;
 
-import model.SpectranglePiece;
-import model.SpectranglePlayer;
+import model.Player;
+import model.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Attribute {
 
-    private List<SpectranglePiece> tiles;
-    private List<SpectranglePlayer> players;
+    private List<Tile> tiles;
+    private List<Player> players;
     private List<Integer> indexes;
     private String action;
 
     public Attribute(String action) {
         this.action = action;
-        this.tiles = new ArrayList<SpectranglePiece>();
-        this.players = new ArrayList<SpectranglePlayer>();
-        this.indexes = new ArrayList<Integer>();
+        this.tiles = new ArrayList<>();
+        this.players = new ArrayList<>();
+        this.indexes = new ArrayList<>();
     }
 
-    public void addTile(SpectranglePiece tile) {
+    public void addTile(Tile tile) {
         this.tiles.add(tile);
     }
 
-    public void addPlayer(SpectranglePlayer player) {
+    public void addPlayer(Player player) {
         this.players.add(player);
     }
 
@@ -32,35 +32,20 @@ public class Attribute {
         this.indexes.add(index);
     }
 
-    public List<SpectranglePiece> getTiles() {
+    public List<Tile> getTiles() {
         return tiles;
     }
 
-    public void setTiles(List<SpectranglePiece> tiles) {
-        this.tiles = tiles;
-    }
-
-    public List<SpectranglePlayer> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
-    }
-
-    public void setPlayers(List<SpectranglePlayer> players) {
-        this.players = players;
     }
 
     public List<Integer> getIndex() {
         return indexes;
     }
 
-    public void setIndex(List<Integer> index) {
-        this.indexes = index;
-    }
-
     public String getAction() {
         return action;
     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
 }

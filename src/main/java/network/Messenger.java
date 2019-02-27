@@ -1,37 +1,38 @@
 package network;
 
-import controller.SpectrangleController;
-import model.SpectranglePieceOrientation;
-import model.SpectranglePlayer;
+import controller.Controller;
+import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Messenger {
 
-    private List<SpectrangleController> controllers;
+    private List<Controller> controllers;
     private List<Integer> errorCodes;
 
 
-    public Messenger(List<SpectrangleController> controllers) {
+    public Messenger(List<Controller> controllers) {
         this.controllers = controllers;
-        this.errorCodes = new ArrayList<Integer>();
-        this.errorCodes.add(0);// general error
-        this.errorCodes.add(1);// username is taken
-        this.errorCodes.add(2);// invalid move
-        this.errorCodes.add(3);// not your turn
-        this.errorCodes.add(4);// unknown command
-        this.errorCodes.add(5);// invalid command
-        this.errorCodes.add(6);// invalid parameter
+        this.errorCodes = new ArrayList<>();
+        this.errorCodes.add(400);// general error
+        this.errorCodes.add(403);
+        this.errorCodes.add(404);
+
     }
 
-    public static void broadcast(List<SpectranglePlayer> players, String msg) {
-        for (SpectranglePlayer player : players) {
+    public static void broadcast(List<Player> players, String msg) {
+        for (Player player : players) {
             player.getPeer().write(msg);
         }
     }
 
-    public void forward(Peer peer, String message, SpectranglePieceOrientation orientation) {
+    private void printStatusCode(Peer peer, Message msg) {
+        System.out.println(msg.getErrorCode() + ": " + msg.getStringArgs());
+        System.out.print("> ");
+    }
+
+    public void forward(Peer peer, String message) {
         Message msg = new Message(message);
 
         if (msg.getErrorCode() != null) {
@@ -39,16 +40,11 @@ public class Messenger {
             return;
         }
 
-        for (SpectrangleController controller : this.controllers) {
+        for (Controller controller : this.controllers) {
             if (controller.hasMethod(msg.getCommand())) {
-                controller.forward(peer, msg, null);
+                controller.forward(peer, msg);
             }
         }
-    }
-
-    private void printStatusCode(Peer peer, Message msg) {
-        System.out.println(msg.getErrorCode() + ": " + msg.getStringArgs());
-        System.out.print("> ");
     }
 
 }

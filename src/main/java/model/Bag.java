@@ -2,12 +2,12 @@ package model;
 
 import exceptions.EmptyBagException;
 
-public interface SpectrangleBag {
+public interface Bag {
 
 
     void resetBag();
 
-    SpectranglePiece takeSpectranglePiece() throws EmptyBagException;
+    Tile takeTile() throws EmptyBagException;
 
     int getTheNumberOfRemainingPieces();
 

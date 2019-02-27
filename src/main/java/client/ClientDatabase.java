@@ -1,7 +1,7 @@
 package client;
 
-import model.SpectrangleGame;
-import model.SpectranglePlayer;
+import model.Game;
+import model.Player;
 import network.Database;
 import network.InputThread;
 import network.Peer;
@@ -11,8 +11,8 @@ public class ClientDatabase implements Database {
 
     private Peer peer;
     private InputThread inputThread;
-    private SpectrangleGame game;
-    private SpectranglePlayer player;
+    private Game game;
+    private Player player;
 
 
     public ClientDatabase() {
@@ -36,19 +36,19 @@ public class ClientDatabase implements Database {
         this.inputThread = inputThread;
     }
 
-    public SpectrangleGame getGame() {
+    public Game getGame() {
         return game;
     }
 
-    public void setGame(SpectrangleGame game) {
+    public void setGame(Game game) {
         this.game = game;
     }
 
-    public SpectranglePlayer getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(SpectranglePlayer player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
 }

@@ -1,7 +1,5 @@
 package view;
 
-import model.SpectranglePieceColor;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -11,16 +9,18 @@ import java.util.stream.Stream;
 public class SpectrangleBoardPrinter {
     private static List<Integer> bonuses = Arrays.asList(1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 2, 4, 1, 4, 2, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 2, 1, 1, 1, 3, 1);
     private static List<Integer> values = Arrays.asList(5, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    private static List<SpectranglePieceColor> vertical = Arrays.asList(SpectranglePieceColor.R, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    private static List<SpectranglePieceColor> left = Arrays.asList(SpectranglePieceColor.G, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    private static List<SpectranglePieceColor> right = Arrays.asList(SpectranglePieceColor.B, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static List<Character> vertical = Arrays.asList('R', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static List<Character> left = Arrays.asList('G', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static List<Character> right = Arrays.asList('B', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
     public static void main(String[] args) {
         // This is an example of how to use the function below.
         System.out.println(getBoardString(values, vertical, left, right));
+        SpectrangleBoardPrinter.printTile();
+
     }
 
-    /**
+    /*
      * Method to print a board of Spectrangle, given the properties of the pieces that reside on it.
      * <p>
      * The arguments to this method together represent the current state of the board. You will need to generate
@@ -57,7 +57,7 @@ public class SpectrangleBoardPrinter {
      *                 on it, the value is a character representing the color of the right side of the piece.
      * @return A string representing the state of the board as given.
      */
-    public static String getBoardString(List<Integer> values, List<SpectranglePieceColor> vertical, List<SpectranglePieceColor> left, List<SpectranglePieceColor> right) {
+    public static String getBoardString(List<Integer> values, List<Character> vertical, List<Character> left, List<Character> right) {
         // All lists should have exactly 36 items.
         if (!Stream.of(values, vertical, left, right).parallel().map(List::size).allMatch(n -> n == 36)) {
             throw new IllegalArgumentException("Input lists should all have 36 items, one for each field on the board.");
@@ -120,5 +120,13 @@ public class SpectrangleBoardPrinter {
             indexed_values.put(i, inputList.get(i));
         }
         return indexed_values;
+    }
+
+    public static void printTile() {
+        String template = "\n" + "        ^\n" +
+                "       / \\\n" + "      /   \\\n" + "     /A 1 B\\\n"
+                + "    /   C   \\\n" + "   -----------";
+
+        System.out.print(template);
     }
 }

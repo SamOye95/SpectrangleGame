@@ -1,6 +1,6 @@
 package model;
 
-public enum SpectranglePlayerStatus {
+public enum PlayerStatus {
     NOT_STARTED, RUNNING, FINISHED
 
 }

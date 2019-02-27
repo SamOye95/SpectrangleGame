@@ -1,8 +1,7 @@
 package server;
 
 import exceptions.PeerNotFoundException;
-import model.SpectrangleHumanPlayer;
-import model.SpectranglePlayer;
+import model.HumanPlayer;
 import network.Peer;
 import network.Setup;
 
@@ -19,7 +18,7 @@ public class ServerPeer implements Setup {
 
     @Override
     public void run() {
-        SpectranglePlayer player = new SpectrangleHumanPlayer(null, this.peer);
+        HumanPlayer player = new HumanPlayer(null, this.peer);
 
         try {
             this.database.insertUser(peer, player);
