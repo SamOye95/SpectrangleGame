@@ -56,7 +56,7 @@ public class Client {
 
         try {
             ip_addr = "localhost";
-            port = 8082;
+            port = 8086;
         } catch (NumberFormatException e) {
             System.out.println("Invalid port. Terminating!");
             return;
